@@ -1,40 +1,24 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Глава 1</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #101010;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
+<div id="chapter-content"></div>
+<script>
+  // Получаем номер главы из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const chapterIndex = parseInt(urlParams.get('chapter')) || 0;
 
-    .navigation {
-      display: flex;
-      justify-content: space-between;
-    }
+  // Загружаем JSON
+  fetch('chapters.json')
+    .then(response => response.json())
+    .then(data => {
+      // Загружаем содержимое текущей главы
+      const chapter = data[chapterIndex];
+      document.title = chapter.title; // Устанавливаем заголовок страницы
+      const contentContainer = document.getElementById('chapter-content');
 
-    .navigation a {
-      color: white;
-      text-decoration: underline;
-    }
-
-    .navigation a:hover {
-      color: #ff6347;
-    }
-  </style>
-</head>
-<body>
-  <div class="navigation">
-    <a href="book.html">Назад к содержанию</a>
-    <a href="chapter1.html">Предыдущая глава</a>
-    <a href="chapter2.html">Следующая глава</a>
-  </div>
-  <h1>Глава 1</h1>
-  <p>Текст главы подгружается из JSON.</p>
-</body>
-</html>
+      // Добавляем параграфы главы
+      chapter.content.forEach(paragraph => {
+        const p = document.createElement('p');
+        p.textContent = paragraph;
+        contentContainer.appendChild(p);
+      });
+    })
+    .catch(error => console.error('Ошибка загрузки JSON:', error));
+</script>

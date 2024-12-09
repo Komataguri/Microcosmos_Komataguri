@@ -36,6 +36,7 @@
 
     .book-info {
       flex: 1.25;
+      max-width: 700px; /* Увеличенная ширина блока */
       color: white;
     }
 
@@ -47,21 +48,31 @@
       color: white;
     }
 
-    .table-of-contents {
-      list-style: none;
-      padding: 0;
-      margin-top: 30px;
+    .book-description {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
     }
 
-    .table-of-contents a {
+    .author, .release-year, .genres {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .toc-item a {
       text-decoration: underline;
       color: white;
       transition: color 0.3s;
       font-size: 1.1rem;
     }
 
-    .table-of-contents a:hover {
+    .toc-item a:hover {
       color: #ff6347;
+    }
+
+    .table-of-contents {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
     }
 
     /* Адаптация для мобильных устройств */
@@ -77,12 +88,14 @@
       }
 
       .book-info {
+        flex: 1;
         text-align: center;
       }
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <!-- Обложка книги -->
     <img src="path-to-your-book1-cover.jpg" alt="Приди, меч!" class="book-cover">
@@ -108,7 +121,38 @@
 
   <h3>Содержание:</h3>
   <ul class="table-of-contents">
-    <li><a href="chapter1.html">Введение от переводчика и немного интересных фактов</a></li>
-    <li><a href="chapter2.html">Глава 1. Пробуждение насекомых</a></li>
-    <li><a href="chapter3.html">Глава 2. Открыть дверь</a></li>
-    <li><a href="chapter4.html">Глава 3. Восход солнца</a></
+    <li class="toc-item"><a href="chapter1.html">Введение от переводчика и немного интересных фактов</a></li>
+    <li class="toc-item"><a href="chapter2.html">Глава 1. Пробуждение насекомых</a></li>
+    <li class="toc-item"><a href="chapter3.html">Глава 2. Открыть дверь</a></li>
+    <li class="toc-item"><a href="chapter4.html">Глава 3. Восход солнца</a></li>
+    <li class="toc-item"><a href="chapter5.html">Глава 4. Желтая птица</a></li>
+    <li class="toc-item"><a href="chapter6.html">Глава 5. Докопаться до истины</a></li>
+    <li class="toc-item"><a href="chapter7.html">Глава 6. Плохое предзнаменование</a></li>
+    <li class="toc-item"><a href="chapter8.html">Глава 7. Чаша с водой</a></li>
+    <li class="toc-item"><a href="chapter9.html">Глава 8. Сорная трава</a></li>
+    <li class="toc-item"><a href="chapter10.html">Глава 9. Хотя небесный дождь щедр…</a></li>
+    <li class="toc-item"><a href="chapter11.html">Глава 10. Поглотить ци быка</a></li>
+    <li class="toc-item"><a href="chapter12.html">Глава 11. Дева и летающий меч</a></li>
+    <li class="toc-item"><a href="chapter13.html">Глава 12. Переулок</a></li>
+    <li class="toc-item"><a href="chapter14.html">Глава 13. Встреча</a></li>
+    <li class="toc-item"><a href="chapter15.html">Глава 14. Пятый день пятого месяца</a></li>
+    <li class="toc-item"><a href="chapter16.html">Глава 15. Подавляющее превосходство</a></li>
+    <li class="toc-item"><a href="chapter17.html">Глава 16. И не мечтай!</a></li>
+    <li class="toc-item"><a href="chapter18.html">Глава 17. Если есть несправедливость, то раздается звук</a></li>
+    <li class="toc-item"><a href="chapter19.html">Глава 18. Три из пяти</a></li>
+    <li class="toc-item"><a href="chapter20.html">Глава 19. Великое Дао</a></li>
+    <li class="toc-item"><a href="chapter21.html">Глава 20. Неожиданные осложнения</a></li>
+    <li class="toc-item"><a href="chapter22.html">Глава 21. Змееяд</a></li>
+    <li class="toc-item"><a href="chapter23.html">Глава 22. Предел</a></li>
+    <li class="toc-item"><a href="chapter24.html">Глава 23. Тень софоры</a></li>
+    <li class="toc-item"><a href="chapter25.html">Глава 24. Взаимный подарок</a></li>
+    <li class="toc-item"><a href="chapter26.html">Глава 25. Прощание</a></li>
+    <li class="toc-item"><a href="chapter27.html">Глава 26. Легко договориться</a></li>
+    <li class="toc-item"><a href="chapter28.html">Глава 27. Завершающий штрих</a></li>
+    <li class="toc-item"><a href="chapter29.html">Глава 28. Одержимость богатством</a></li>
+    <li class="toc-item"><a href="chapter30.html">Глава 29. Лисье очарование</a></li>
+    <li class="toc-item"><a href="chapter31.html">Глава 30. Темная комната</a></li>
+  </ul>
+
+</body>
+</html>
