@@ -1,23 +1,31 @@
-[
-  {
-    "title": "Введение от переводчика и немного интересных фактов",
-    "content": [
-      "Каких только чудес не бывает на свете.",
-      "В центре мироздания обитает ученый...",
-      "На краю утесов Восточного моря..."
-    ]
-  },
-  {
-    "title": "Глава 1. Пробуждение насекомых",
-    "content": [
-      "Однажды бедный юноша, выросший на севере...",
-      "И вот настал день, когда юноша взял деревянный меч..."
-    ]
-  },
-  {
-    "title": "Глава 2. Открыть дверь",
-    "content": [
-      "Текст главы 2. Здесь начинается новое приключение."
-    ]
-  }
-]
+{
+  "chapters": [
+    {"title": "Глава 4. Желтая птица", "filename": "chapter4.html"},
+    {"title": "Глава 5. Докопаться до истины", "filename": "chapter5.html"},
+    {"title": "Глава 6. Плохое предзнаменование", "filename": "chapter6.html"},
+    {"title": "Глава 7. Чаша с водой", "filename": "chapter7.html"},
+    {"title": "Глава 8. Сорная трава", "filename": "chapter8.html"},
+    {"title": "Глава 9. Хотя небесный дождь щедр…", "filename": "chapter9.html"},
+    {"title": "Глава 10. Поглотить ци быка", "filename": "chapter10.html"},
+    {"title": "Глава 11. Дева и летающий меч", "filename": "chapter11.html"},
+    {"title": "Глава 12. Переулок", "filename": "chapter12.html"},
+    {"title": "Глава 13. Встреча", "filename": "chapter13.html"},
+    {"title": "Глава 14. Пятый день пятого месяца", "filename": "chapter14.html"},
+    {"title": "Глава 15. Подавляющее превосходство", "filename": "chapter15.html"},
+    {"title": "Глава 16. И не мечтай!", "filename": "chapter16.html"},
+    {"title": "Глава 17. Если есть несправедливость, то раздается звук", "filename": "chapter17.html"},
+    {"title": "Глава 18. Три из пяти", "filename": "chapter18.html"},
+    {"title": "Глава 19. Великое Дао", "filename": "chapter19.html"},
+    {"title": "Глава 20. Неожиданные осложнения", "filename": "chapter20.html"},
+    {"title": "Глава 21. Змееяд", "filename": "chapter21.html"},
+    {"title": "Глава 22. Предел", "filename": "chapter22.html"},
+    {"title": "Глава 23. Тень софоры", "filename": "chapter23.html"},
+    {"title": "Глава 24. Взаимный подарок", "filename": "chapter24.html"},
+    {"title": "Глава 25. Прощание", "filename": "chapter25.html"},
+    {"title": "Глава 26. Легко договориться", "filename": "chapter26.html"},
+    {"title": "Глава 27. Завершающий штрих", "filename": "chapter27.html"},
+    {"title": "Глава 28. Одержимость богатством", "filename": "chapter28.html"},
+    {"title": "Глава 29. Лисье очарование", "filename": "chapter29.html"},
+    {"title": "Глава 30. Темная комната", "filename": "chapter30.html"}
+  ]
+}
