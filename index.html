@@ -29,6 +29,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      padding: 20px; /* Отступы от краев экрана */
     }
 
     /* Фон видео */
@@ -60,35 +61,39 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.3s ease, filter 0.3s ease;
-      margin-bottom: 20px;
     }
 
     .carousel-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.7); /* Затемнение в обычном состоянии */
+      filter: brightness(0.7);
       transition: filter 0.3s ease;
     }
 
     .carousel-item:hover img {
-      filter: brightness(1); /* Убираем затемнение при наведении */
+      filter: brightness(1);
     }
 
     .carousel-item:hover {
-      transform: scale(1.1); /* Увеличение при наведении */
+      transform: scale(1.1);
     }
 
-    /* Контейнер кнопок справа */
+    /* Текст под каруселью */
+    .header-text {
+      text-align: center;
+      margin-top: calc(1em + 10px); /* Расстояние в ширину шрифта надписи */
+    }
+
+    .header-text p {
+      font-size: 1.2rem;
+    }
+
+    /* Контейнер кнопок соцсетей */
     .sidebar-buttons {
-      position: fixed;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 20;
+      gap: 15px;
+      margin-top: 20px;
     }
 
     .sidebar-button {
@@ -102,30 +107,49 @@
       font-size: 1rem;
       cursor: pointer;
       transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-      position: relative;
-      overflow: hidden;
     }
 
     .sidebar-button:hover {
-      transform: scale(1.05); /* Увеличение при наведении */
-      background-color: white; /* Белый фон при наведении */
-      color: #222; /* Черный текст при наведении */
+      transform: scale(1.05);
+      background-color: white;
+      color: #222;
     }
 
-    /* Текст под каруселью */
-    .header-text {
-      text-align: center;
-      margin-top: 20px;
-    }
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+      .carousel {
+        flex-direction: column;
+        gap: 30px;
+      }
 
-    .header-text h1 {
-      font-size: 2rem;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
+      .carousel-item {
+        width: 90%;
+        height: auto;
+      }
 
-    .header-text p {
-      font-size: 1.2rem;
+      .carousel-item img {
+        height: auto;
+      }
+
+      .header {
+        height: auto;
+        padding: 20px 10px;
+      }
+
+      .sidebar-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .sidebar-button {
+        width: 100px; /* Кнопки в два раза короче */
+        padding: 8px;
+      }
+
+      .header-text {
+        margin-top: 20px;
+      }
     }
   </style>
 </head>
@@ -150,17 +174,16 @@
     </div>
 
     <div class="header-text">
-      <h1>Добро пожаловать в Читалку</h1>
       <p>Выберите книгу, чтобы начать чтение</p>
     </div>
-  </div>
 
-  <!-- Боковые кнопки -->
-  <div class="sidebar-buttons">
-    <a href="https://boosty.to/komataguri" target="_blank" class="sidebar-button">Boosty</a>
-    <a href="https://tl.rulate.ru/users/209811" target="_blank" class="sidebar-button">Rulate</a>
-    <a href="https://t.me/micro_koma" target="_blank" class="sidebar-button">Telegram</a>
-    <a href="https://imgur.com/a/shrouding-heavens-Spr1aNB" target="_blank" class="sidebar-button">Галерея</a>
+    <!-- Кнопки соцсетей -->
+    <div class="sidebar-buttons">
+      <a href="https://boosty.to/komataguri" target="_blank" class="sidebar-button">Boosty</a>
+      <a href="https://tl.rulate.ru/users/209811" target="_blank" class="sidebar-button">Rulate</a>
+      <a href="https://t.me/micro_koma" target="_blank" class="sidebar-button">Telegram</a>
+      <a href="https://imgur.com/a/shrouding-heavens-Spr1aNB" target="_blank" class="sidebar-button">Галерея</a>
+    </div>
   </div>
 </body>
 </html>
