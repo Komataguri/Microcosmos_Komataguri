@@ -36,6 +36,29 @@
     .chapter-content p {
       margin-bottom: 10px;
     }
+
+    .chapter-content img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 10px auto;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .underline {
+      text-decoration: underline;
+    }
+
+    .colored {
+      color: rgb(46, 116, 181); /* Пример для синего цвета */
+    }
   </style>
 </head>
 <body>
@@ -49,23 +72,38 @@
   <div id="chapter-content" class="chapter-content"></div>
 
   <script>
+    // Путь к JSON-файлу
+    const jsonPath = "file:///D:/Site/Microcosmos_Komataguri/chapters.json";
+    const imagesPath = "file:///D:/Site/Microcosmos_Komataguri/images/";
+
     // Получаем номер главы из URL
     const urlParams = new URLSearchParams(window.location.search);
     const chapterIndex = parseInt(urlParams.get('chapter')) || 0;
 
-    // Загружаем JSON-файл с данными о главах
-    fetch('chapters.json')
-      .then(response => response.json())
-      .then(data => {
-        // Устанавливаем заголовок и содержимое текущей главы
-        const chapter = data[chapterIndex];
+    // Функция загрузки главы
+    async function loadChapter() {
+      try {
+        const response = await fetch(jsonPath);
+        const data = await response.json();
+        
+        // Устанавливаем заголовок главы
+        const chapter = data.chapters[chapterIndex];
         document.getElementById('chapter-title').textContent = chapter.title;
 
         const contentContainer = document.getElementById('chapter-content');
-        chapter.content.forEach(paragraph => {
-          const p = document.createElement('p');
-          p.textContent = paragraph;
-          contentContainer.appendChild(p);
+        contentContainer.innerHTML = ""; // Очищаем контейнер
+
+        // Проходим по содержимому главы
+        chapter.content.forEach(item => {
+          if (item.type === "text") {
+            const p = document.createElement('p');
+            p.textContent = item.value;
+            contentContainer.appendChild(p);
+          } else if (item.type === "image") {
+            const img = document.createElement('img');
+            img.src = `${imagesPath}${item.src}`;
+            contentContainer.appendChild(img);
+          }
         });
 
         // Настраиваем ссылки на предыдущую и следующую главы
@@ -78,13 +116,18 @@
           prevLink.style.display = 'none'; // Скрываем, если нет предыдущей главы
         }
 
-        if (chapterIndex < data.length - 1) {
+        if (chapterIndex < data.chapters.length - 1) {
           nextLink.href = `chapter.html?chapter=${chapterIndex + 1}`;
         } else {
           nextLink.style.display = 'none'; // Скрываем, если нет следующей главы
         }
-      })
-      .catch(error => console.error('Ошибка загрузки главы:', error));
+      } catch (error) {
+        console.error('Ошибка загрузки главы:', error);
+      }
+    }
+
+    // Загружаем главу при загрузке страницы
+    loadChapter();
   </script>
 </body>
 </html>
