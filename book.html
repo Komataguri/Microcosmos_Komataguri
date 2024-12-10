@@ -17,54 +17,62 @@
       color: white;
       line-height: 1.6;
       padding: 20px;
+      font-size: 16px; /* Размер шрифта для всего текста */
     }
 
     .container {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: stretch; /* Растягивает блоки по высоте */
       gap: 20px;
       margin-top: 20px;
     }
 
     .book-cover {
+      flex: 0 0 auto; /* Фиксирует размер обложки */
       width: 100%;
-      max-width: 300px;
+      max-width: 315px;
       height: auto;
       object-fit: cover;
       border-radius: 10px;
+      align-self: stretch; /* Растягивает обложку до высоты контейнера */
     }
 
     .book-info {
-      flex: 1.25; /* Увеличение ширины на четверть */
+      flex: 1; /* Задает пропорцию для текста */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* Распределяет содержимое равномерно */
       color: white;
     }
 
     .book-title {
-      font-size: 3rem;
+      font-size: 25px; /* Размер шрифта для названия книги */
       margin-bottom: 10px;
-      text-align: left;
+      text-align: center; /* Выравнивание по центру */
       text-decoration: underline;
       color: white;
     }
 
     .book-description {
-      font-size: 1.2rem;
+      font-size: 16px; /* Размер шрифта для аннотации */
       margin-bottom: 30px;
       width: 100%;
-      max-width: 100%; /* Увеличивает ширину аннотации */
+      max-width: 100%;
+      text-align: left; /* Выравнивание по левому краю */
     }
 
-    .author, .release-year, .genres {
+    .author, .release-year, .genres, .tags, .alternative-title, .chapter-count {
       margin-bottom: 10px;
-      font-size: 1.1rem;
+      font-size: 16px; /* Размер шрифта для всех дополнительных данных */
+      text-align: left; /* Выравнивание по левому краю */
     }
 
     .toc-item a {
       text-decoration: underline;
       color: white;
       transition: color 0.3s;
-      font-size: 1.1rem;
+      font-size: 16px; /* Размер шрифта для ссылок в оглавлении */
     }
 
     .toc-item a:hover {
@@ -74,31 +82,75 @@
     .table-of-contents {
       list-style: none;
       padding: 0;
-      margin-top: 30px;
+      margin-top: 20px; /* Расстояние между "Содержание" и списком */
+      text-align: left; /* Выравнивание списка по левому краю */
+    }
+
+    h3 {
+      margin-top: 20px; /* Расстояние от верхнего края обложки */
+      text-align: center; /* Выравнивание заголовка по центру */
+    }
+
+    /* Стиль для жирного и подчеркнутого текста */
+    .book-info p {
+      font-weight: normal;
+      text-decoration: none;
+    }
+
+    .book-info p strong {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .book-info p span {
+      font-weight: bold;
+      text-decoration: underline;
     }
 
     /* Адаптация для мобильных устройств */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
 
-      .book-cover {
-        width: 80%;
-        max-width: 250px;
-        height: auto;
-      }
+  .book-cover {
+    width: 80%;
+    max-width: 250px;
+    height: auto;
+    margin: 0 auto; /* Центрирование обложки */
+  }
 
-      .book-info {
-        text-align: center;
-      }
+  .book-info {
+    text-align: left; /* Выравнивание текста по левому краю */
+  }
 
-      .book-description {
-        max-width: 100%;
-        font-size: 1rem;
-      }
-    }
+  .book-description {
+    max-width: 100%;
+    font-size: 16px; /* Размер шрифта для аннотации на мобильных устройствах */
+    text-align: left; /* Выравнивание текста по левому краю */
+  }
+
+  h3 {
+    margin-top: 20px; /* Отступ сверху */
+    margin-bottom: 20px; /* Отступ снизу */
+    text-align: center; /* Выравнивание заголовка по центру */
+  }
+
+  .table-of-contents {
+    margin-top: 15px; /* Меньший отступ между "Содержание" и списком */
+    text-align: left; /* Выравнивание списка по левому краю для мобильных устройств */
+  }
+
+  .toc-item {
+    text-align: left; /* Выравнивание текста по левому краю для мобильных устройств */
+  }
+
+  /* Новый стиль для текста до "Содержание": */
+  .book-info p, .book-description {
+    text-align: justify; /* Выравнивание текста по ширине */
+  }
+}
   </style>
 </head>
 <body>
@@ -108,20 +160,20 @@
       <img src="path-to-your-book1-cover.jpg" alt="Приди, меч!" class="book-cover">
       <div class="book-info">
         <h2 class="book-title">Приди, меч!</h2>
-        <p class="author">Автор: 烽火戏剧王子</p>
-        <p class="release-year">Год выпуска: 2017</p>
-        <p class="chapter-count">Количество глав: 1162 (выпуск продолжается)</p>
-        <p class="alternative-title">Альтернативное название: 剑来 / Jian Lai / Меч грядущего</p>
-        <p class="genres">Жанры: боевые искусства, драма, приключения, сёнэн, сянься (XianXia), фэнтези</p>
-        <p class="tags">Тэги: алхимия, буддизм, главный герой мужчина, древний мир, культивация, сирота, спокойный главный герой</p>
+        <p><span>Автор:</span> 烽火戏剧王子</p>
+        <p><span>Год выпуска:</span> 2017</p>
+        <p><span>Количество глав:</span> 1162 (выпуск продолжается)</p>
+        <p><span>Альтернативное название:</span> 剑来 / Jian Lai / Меч грядущего</p>
+        <p><span>Жанры:</span> боевые искусства, драма, приключения, сёнэн, сянься (XianXia), фэнтези</p>
+        <p><span>Тэги:</span> алхимия, буддизм, главный герой мужчина, древний мир, культивация, сирота, спокойный главный герой</p>
         <p class="book-description">
-Аннотация: Каких только чудес не бывает на свете.
-В центре мироздания обитает ученый, который однажды мечом рассек водопад Небесной реки, и никто из людей не гордится собой так, как он.
-На краю утесов Восточного моря обосновался безымянный даос, не пожелавший вознестись и прозябать на вершине горы. Он лишь хочет, чтобы прохладный ветерок овевал его лицо.
-В Западном раю живет старый монах, что любит рассказывать людям истории. Он держит девять небесных драконов.
-В Диких землях на южных окраинах живет слепой художник, заставивший марионеток в золотых доспехах сдвинуть множество огромных гор для создания прекрасной картины.
-Однажды бедный юноша, выросший на севере, увидел над головой тысячи бессмертных, летящих на мечах, подобно стае саранчи. Тогда ему захотелось пойти и своими глазами увидеть того ученого мужа, о котором рассказывал сказитель, а также бушующие приливы Восточного моря, бескрайние пески Запада и величественные горы Южной пустоши.
-И вот настал день, когда юноша взял деревянный меч и отправился на юг.
+          <span>Аннотация:</span> Каких только чудес не бывает на свете.
+          В центре мироздания обитает ученый, который однажды мечом рассек водопад Небесной реки, и никто из людей не гордится собой так, как он.
+          На краю утесов Восточного моря обосновался безымянный даос, не пожелавший вознестись и прозябать на вершине горы. Он лишь хочет, чтобы прохладный ветерок овевал его лицо.
+          В Западном раю живет старый монах, что любит рассказывать людям истории. Он держит девять небесных драконов.
+          В Диких землях на южных окраинах живет слепой художник, заставивший марионеток в золотых доспехах сдвинуть множество огромных гор для создания прекрасной картины.
+          Однажды бедный юноша, выросший на севере, увидел над головой тысячи бессмертных, летящих на мечах, подобно стае саранчи. Тогда ему захотелось пойти и своими глазами увидеть того ученого мужа, о котором рассказывал сказитель, а также бушующие приливы Восточного моря, бескрайние пески Запада и величественные горы Южной пустоши.
+          И вот настал день, когда юноша взял деревянный меч и отправился на юг.
         </p>
       </div>
     </div>
@@ -140,8 +192,9 @@
       <li class="toc-item"><a href="chapters/1%20(7)/chapter7.html#chapter8">Глава 7. Чаша с водой</a></li>
       <li class="toc-item"><a href="chapters/1%20(8)/chapter8.html#chapter9">Глава 8. Сорная трава</a></li>
       <li class="toc-item"><a href="chapters/1%20(9)/chapter9.html#chapter10">Глава 9. Хотя небесный дождь щедр…</a></li>
-      <li class="toc-item"><a href="chapters/2%20(10)/chapter10.html#chapter11">Глава 10. Поглотить ци быка</a></li>
-      <li class="toc-item"><a href="chapters/2%20(11)/chapter11.html#chapter12">Глава 11. Дева и летающий меч</a></li>
+      <li class="toc-item"><a href="chapters/1%20(10)/chapter10.html#chapter11">Глава 10. Поглотить ци быка</a></li>
+      <li class="toc-item"><a href="chapters/2%20
+(11)/chapter11.html#chapter12">Глава 11. Дева и летающий меч</a></li>
       <li class="toc-item"><a href="chapters/2%20(12)/chapter12.html#chapter13">Глава 12. Переулок</a></li>
       <li class="toc-item"><a href="chapters/2%20(13)/chapter13.html#chapter14">Глава 13. Встреча</a></li>
       <li class="toc-item"><a href="chapters/2%20(14)/chapter14.html#chapter15">Глава 14. Пятый день пятого месяца</a></li>
