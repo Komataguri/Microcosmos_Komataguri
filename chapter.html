@@ -4,21 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Приди, меч!</title>
-  <!-- Добавляем библиотеку для работы с Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
- <style>
-    /* Добавлены новые стили и изменены существующие */
-    .navigation-buttons button {
-      background: #2a2a2a !important; /* Изменен цвет фона */
-      border: 1px solid #404040 !important; /* Добавлена граница */
-      transition: all 0.3s ease !important;
-    }
-
-    .navigation-buttons button:hover {
-      background: #3a3a3a !important; /* Новый цвет при наведении */
-      border-color: #505050 !important;
-    }
-    /* Все ваши оригинальные стили остаются без изменений */
+  <style>
     * {
       margin: 0;
       padding: 0;
@@ -108,7 +95,6 @@
       .book-cover {
         width: 80%;
         max-width: 250px;
-        height: auto;
         margin: 0 auto;
       }
 
@@ -118,22 +104,14 @@
 
       .book-description {
         max-width: 100%;
-        font-size: 16px;
-        text-align: justify;
       }
 
       h3 {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        text-align: center;
+        margin: 20px 0;
       }
 
       .table-of-contents {
         margin-top: 15px;
-      }
-
-      .toc-item {
-        text-align: left;
       }
     }
 
@@ -148,7 +126,6 @@
       margin: 20px auto;
     }
 
-    /* Стили для кнопки "Наверх" */
     #scrollToTop {
       position: fixed;
       bottom: 2rem;
@@ -164,13 +141,13 @@
       opacity: 0.7;
       transition: all 0.3s ease;
       border: 1px solid #404040;
-      color: #fff; /* Добавлено свойство для цвета стрелки */
-      font-size: 24px; /* Размер стрелки */
+      color: #fff;
+      font-size: 24px;
     }
 
     #scrollToTop:hover {
-            opacity: 1;
-            transform: translateY(-3px);
+      opacity: 1;
+      transform: translateY(-3px);
     }
 
     @keyframes spin {
@@ -178,13 +155,11 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Красная строка для абзацев */
     .chapter-content p {
       text-indent: 1.5em;
       margin-bottom: 1em;
     }
 
-    /* Центрирование заголовков глав */
     .chapter-content h1,
     .chapter-content h2,
     .chapter-content h3 {
@@ -192,7 +167,6 @@
       margin: 2rem 0;
     }
 
-    /* Стили для контента глав */
     .chapter-content {
       max-width: 800px;
       margin: 0 auto;
@@ -211,15 +185,22 @@
       justify-content: center;
       gap: 15px;
       margin: 20px 0;
+      flex-wrap: wrap;
     }
 
     .navigation-buttons button {
       padding: 10px 20px;
-      background: #ff6347;
-      border: none;
+      background: #2a2a2a;
+      border: 1px solid #404040;
       border-radius: 5px;
       color: white;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .navigation-buttons button:hover {
+      background: #3a3a3a;
+      border-color: #505050;
     }
   </style>
 </head>
@@ -254,7 +235,6 @@
     <ul class="table-of-contents" id="toc-list"></ul>
   </section>
 
-  <!-- Секция для отображения контента главы -->
   <div id="chapter-container" style="display: none;">
     <div class="navigation-buttons">
       <button onclick="navigateChapter(-1)">← Назад</button>
@@ -264,26 +244,21 @@
     <div class="chapter-content" id="chapter-content"></div>
   </div>
 
-  <!-- Кнопка "Наверх" -->
   <button id="scrollToTop" onclick="scrollToTop()">↑</button>
 
   <script>
-    // Конфигурация
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
     
-    // Глобальные переменные
     let chapters = [];
     let currentChapterIndex = 0;
 
-    // Элементы DOM
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
     const chapterContent = document.getElementById('chapter-content');
 
-    // Функции
     function toggleLoader(show) {
       loader.style.display = show ? 'block' : 'none';
     }
@@ -342,9 +317,10 @@
         if (!response.ok) throw new Error('Глава не найдена');
         
         let markdown = await response.text();
-        // Исправляем пути к изображениям
+        
         markdown = markdown.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, path) => {
-          return `![${alt}](${BASE_URL}chapters/images/${path})`;
+          const filename = path.split('/').pop();
+          return `![${alt}](${BASE_URL}chapters/images/${filename})`;
         });
         
         chapterContent.innerHTML = marked.parse(markdown);
@@ -367,18 +343,6 @@
       }
     }
 
-    // Функция проверки доступности изображения
-    async function checkImageAvailability(url) {
-      try {
-        const response = await fetch(url, { method: 'HEAD' });
-        if (!response.ok) {
-          console.warn(`Изображение не найдено: ${url}`);
-        }
-      } catch (error) {
-        console.error(`Ошибка загрузки изображения: ${url}`, error);
-      }
-    }
-
     function navigateChapter(direction) {
       const newIndex = currentChapterIndex + direction;
       if (newIndex >= 0 && newIndex < chapters.length) {
@@ -393,14 +357,12 @@
       });
     }
 
-    // Инициализация
     window.addEventListener('DOMContentLoaded', () => {
       loadTableOfContents();
       
-      // Обработчик кнопки "Наверх"
       window.addEventListener('scroll', () => {
-        const scrollBtn = document.getElementById('scrollToTop');
-        scrollBtn.style.display = window.scrollY > 500 ? 'block' : 'none';
+        document.getElementById('scrollToTop').style.display = 
+          window.scrollY > 500 ? 'block' : 'none';
       });
     });
   </script>
