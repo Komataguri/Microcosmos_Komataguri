@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Приди, меч!</title>
+  <title>Затмить небеса</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     /* Добавлены стили для жирных подчеркнутых меток */
@@ -234,24 +234,19 @@
 <body>
   <header>
     <div class="container">
-      <!-- Исправленный путь к обложке -->
-      <img src="images/book-cover_1.jpg" alt="Обложка книги Приди, меч!" class="book-cover">
+      <img src="images/book-cover_2.jpg" alt="Обложка книги Затмить небеса" class="book-cover">
       <div class="book-info">
-        <h2 class="book-title">Приди, меч!</h2>
-        <p><span>Автор:</span> 烽火戏剧王子</p>
-        <p><span>Год выпуска:</span> 2017</p>
-        <p><span>Количество глав:</span> 1162 (выпуск продолжается)</p>
-        <p><span>Альтернативное название:</span> 剑来 / Jian Lai / Меч грядущего</p>
-        <p><span>Жанры:</span> боевые искусства, драма, приключения, сёнэн, сянься (XianXia), фэнтези</p>
-        <p><span>Тэги:</span> алхимия, буддизм, главный герой мужчина, древний мир, культивация, сирота, спокойный главный герой</p>
+        <h2 class="book-title">Затмить небеса</h2>
+        <p><span>Автор:</span> Chen Dong</p>
+        <p><span>Год выпуска:</span> 2010</p>
+        <p><span>Количество глав:</span> 1821</p>
+        <p><span>Альтернативное название:</span> Окутывая небеса / 遮天 / Shrouding the Heavens / Zhe Tian / Жетянь</p>
+        <p><span>Жанры:</span> боевые искусства, драма, приключения, романтика, сёнэн, сянься (XianXia), фэнтези</p>
+        <p><span>Тэги:</span> аниме, безжалостные персонажи, гарем, культивация, от слабого до сильного, дунхуа, буддизм, даосизм, конфуцианство</p>
         <p class="book-description">
-          <span>Аннотация:</span> Каких только чудес не бывает на свете.
-          В центре мироздания обитает ученый, который однажды мечом рассек водопад Небесной реки, и никто из людей не гордится собой так, как он.
-          На краю утесов Восточного моря обосновался безымянный даос, не пожелавший вознестись и прозябать на вершине горы. Он лишь хочет, чтобы прохладный ветерок овевал его лицо.
-          В Западном раю живет старый монах, что любит рассказывать людям истории. Он держит девять небесных драконов.
-          В Диких землях на южных окраинах живет слепой художник, заставивший марионеток в золотых доспехах сдвинуть множество огромных гор для создания прекрасной картины.
-          Однажды бедный юноша, выросший на севере, увидел над головой тысячи бессмертных, летящих на мечах, подобно стае саранчи. Тогда ему захотелось пойти и своими глазами увидеть того ученого мужа, о котором рассказывал сказитель, а также бушующие приливы Восточного моря, бескрайние пески Запада и величественные горы Южной пустоши.
-          И вот настал день, когда юноша взял деревянный меч и отправился на юг.
+          <span>Аннотация:</span> В холодных и темных глубинах Вселенной девять огромных драконьих туш тянут существующий с незапамятных времен древний бронзовый гроб. Но ради чего мёртвые драконы пересекли звёздные дали?
+          Бесконечно таинственный мир легенд и боевых искусств, наполненный странными и удивительными событиями.
+          Кровь кипит как лава, страсть бушует как море, желания безграничны как бездна... С песней следуй по дороге могущества, и сможешь затмить небеса одним щелчком пальцев.
         </p>
       </div>
     </div>
@@ -264,30 +259,29 @@
   </section>
 
   <div id="chapter-container" style="display: none;">
-    <!-- Верхние кнопки (4 штуки) -->
     <div class="navigation-buttons">
       <button onclick="window.location.href='index.html'">На главную</button>
       <button onclick="navigateChapter(-1)">← Назад</button>
-      <button onclick="window.location.href='chapter.html'">К содержанию</button>
+      <button onclick="window.location.href='chapter2.html'">К содержанию</button>
       <button onclick="navigateChapter(1)">Вперед →</button>
     </div>
     
     <div class="chapter-content" id="chapter-content"></div>
 
-    <!-- Нижние кнопки (2 штуки) -->
     <div class="navigation-buttons">
       <button onclick="navigateChapter(-1)">← Назад</button>
       <button onclick="navigateChapter(1)">Вперед →</button>
     </div>
   </div>
 
-  <!-- Кнопки прокрутки -->
   <button id="scrollToTop" onclick="scrollToTop()">↑</button>
   <button id="scrollToBottom" onclick="scrollToBottom()">↓</button>
 
   <script>
+    // Изменения для второй книги
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
+    const BOOK_PATH = 'chapters/Book2'; // Важное изменение!
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
 
     // Функция прокрутки вниз
@@ -340,7 +334,7 @@
       try {
         toggleLoader(true);
         const response = await fetch(
-          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/chapters?t=${Date.now()}`
+          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BOOK_PATH}?t=${Date.now()}`
         );
         
         if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);

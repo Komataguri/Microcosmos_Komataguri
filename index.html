@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru"> <!-- 1. Исправлен язык -->
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Читалка</title>
   <style>
-    /* Сброс стилей */
+    /* Все оригинальные стили сохранены без изменений */
     * {
       margin: 0;
       padding: 0;
@@ -19,7 +19,6 @@
       overflow-x: hidden;
     }
 
-    /* Шапка */
     .header {
       position: relative;
       width: 100%;
@@ -32,7 +31,6 @@
       padding: 20px;
     }
 
-    /* Фон видео */
     .header video {
       position: absolute;
       top: 0;
@@ -43,7 +41,6 @@
       z-index: -1;
     }
 
-    /* Контейнер карусели */
     .carousel {
       display: flex;
       justify-content: center;
@@ -52,7 +49,6 @@
       flex-wrap: wrap;
     }
 
-    /* Обложки книг */
     .carousel-item {
       position: relative;
       width: 262.5px;
@@ -79,7 +75,6 @@
       transform: scale(1.1);
     }
 
-    /* Текст под каруселью */
     .header-text {
       text-align: center;
       margin-top: calc(1em + 10px);
@@ -89,7 +84,6 @@
       font-size: 1.2rem;
     }
 
-    /* Контейнер кнопок соцсетей */
     .sidebar-buttons {
       display: flex;
       gap: 15px;
@@ -115,7 +109,6 @@
       color: #222;
     }
 
-    /* Мобильная версия */
     @media (max-width: 768px) {
       .carousel {
         flex-direction: column;
@@ -155,27 +148,26 @@
 </head>
 <body>
   <div class="header">
-    <!-- 2. Добавлен poster и атрибут playsinline -->
     <video autoplay loop muted playsinline poster="preview.jpg" id="background-video">
       <source src="your-starry-sky-video.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
 
     <div class="carousel">
-      <!-- 3. Добавлены alt-тексты для изображений -->
-      <div class="carousel-item" onclick="window.location.href='chapter.html';">
-        <img src="path-to-your-book1-cover.jpg" 
-             alt="Обложка книги 'Затмить Небеса'"
+      <!-- Обновленные пути к обложкам -->
+      <div class="carousel-item" onclick="window.location.href='chapter.html?book=1';">
+        <img src="images/book-cover_1.jpg" 
+             alt="Обложка книги 'Приди, меч!'"
              loading="lazy">
       </div>
-      <div class="carousel-item" onclick="window.location.href='#book2';">
-        <img src="path-to-your-book2-cover.jpg" 
-             alt="Обложка книги 'Приди Меч!'"
+      <div class="carousel-item" onclick="window.location.href='chapter2.html';">
+        <img src="images/book-cover_2.jpg" 
+             alt="Обложка книги 'Затмить небеса'"
              loading="lazy">
-      </div>
-      <div class="carousel-item" onclick="window.location.href='#other';">
-        <img src="path-to-your-book3-cover.jpg" 
-             alt="Разные материалы"
+</div>
+      <div class="carousel-item" onclick="window.location.href='chapter3.html';">
+        <img src="images/book-cover_3.jpg" 
+             alt="Обложка книги 'Приятного чтения!'"
              loading="lazy">
       </div>
     </div>
@@ -184,7 +176,6 @@
       <p>Выберите книгу, чтобы начать чтение</p>
     </div>
 
-    <!-- 4. Добавлен rel="noopener" для безопасности -->
     <div class="sidebar-buttons">
       <a href="https://boosty.to/komataguri" 
          target="_blank" 
