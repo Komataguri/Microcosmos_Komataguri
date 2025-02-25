@@ -23,6 +23,16 @@
       --button-bg: #e0d8c8;         /* Светлый фон кнопок */
       --button-border: #b0a898;     /* Светлая рамка кнопок */
     }
+
+    /* Новая третья тема */
+    .theme-forest {
+      --bg-color: #181818;          /* Тот же фон что у Graphite */
+      --text-color: #538135;        /* Зеленоватый текст */
+      --highlight-color: #2e74b5;   /* Синее выделение */
+      --button-bg: #2a2a2a;
+      --button-border: #404040;
+    }
+
     /* Добавлены стили для жирных подчеркнутых меток */
     .book-info span {
       font-weight: bold;
@@ -319,21 +329,20 @@
   <button id="scrollToBottom" onclick="scrollToBottom()">↓</button>
 
   <script>
-    // Добавляем обработчик переключения тем
+    // Обновленный обработчик тем
+    const themes = ['graphite', 'sepia', 'forest'];
     document.getElementById('themeToggle').addEventListener('click', function() {
-      const body = document.body;
-      if (body.classList.contains('theme-graphite')) {
-        body.classList.remove('theme-graphite');
-        body.classList.add('theme-sepia');
-        localStorage.setItem('theme', 'sepia');
-      } else {
-        body.classList.remove('theme-sepia');
-        body.classList.add('theme-graphite');
-        localStorage.setItem('theme', 'graphite');
-      }
+      const currentTheme = localStorage.getItem('theme') || 'graphite';
+      const currentIndex = themes.indexOf(currentTheme);
+      const nextIndex = (currentIndex + 1) % themes.length;
+      const nextTheme = themes[nextIndex];
+      
+      document.body.classList.remove(`theme-${currentTheme}`);
+      document.body.classList.add(`theme-${nextTheme}`);
+      localStorage.setItem('theme', nextTheme);
     });
 
-    // При загрузке страницы проверяем сохраненную тему
+    // Инициализация темы
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme') || 'graphite';
       document.body.classList.add(`theme-${savedTheme}`);
