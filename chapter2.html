@@ -376,7 +376,7 @@
         
         markdown = markdown.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, path) => {
           const filename = path.split('/').pop();
-          return `![${alt}](${BASE_URL}chapters/images/${filename})`;
+         return `![${alt}](${BASE_URL}${BOOK_PATH}/images/${filename})`;
         });
         
         chapterContent.innerHTML = marked.parse(markdown);
