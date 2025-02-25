@@ -6,6 +6,24 @@
   <title>Затмить небеса</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    /* Добавляем CSS переменные для тем */
+    :root {
+      --bg-color: #181818;          /* Основной фон Graphite */
+      --text-color: #E0E0E0;        /* Основной текст */
+      --highlight-color: #A0CFFF;   /* Цвет выделения */
+      --button-bg: #2a2a2a;         /* Фон кнопок */
+      --button-border: #404040;     /* Рамка кнопок */
+    }
+
+    /* Стили для дневной темы */
+    .theme-sepia {
+      --bg-color: #F8F5E8;          /* Сепия фон */
+      --text-color: #5C4033;        /* Темно-коричневый текст */
+      --highlight-color: #9A3B3B;   /* Бордовый акцент */
+      --button-bg: #e0d8c8;         /* Светлый фон кнопок */
+      --button-border: #b0a898;     /* Светлая рамка кнопок */
+    }
+
     /* Добавлены стили для жирных подчеркнутых меток */
     .book-info span {
       font-weight: bold;
@@ -16,7 +34,6 @@
       position: fixed;
       bottom: 5rem;
       right: 2rem;
-      background: #2a2a2a;
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -26,8 +43,6 @@
       cursor: pointer;
       opacity: 0.7;
       transition: all 0.3s ease;
-      border: 1px solid #404040;
-      color: #fff;
       font-size: 24px;
       z-index: 1000;
     }
@@ -41,11 +56,12 @@
 
     body {
       font-family: 'Arial', sans-serif;
-      background: #101010;
-      color: white;
+      background: var(--bg-color);
+      color: var(--text-color);
       line-height: 1.6;
       padding: 20px;
       font-size: 16px;
+      transition: background 0.3s, color 0.3s; /* Плавное переключение */
     }
 
     .container {
@@ -91,14 +107,28 @@
       font-size: 16px;
     }
 
+    /* Остальные стили с заменой цветов на переменные */
     .toc-item a {
       text-decoration: underline;
-      color: white;
+      color: var(--text-color);
       transition: color 0.3s;
     }
 
     .toc-item a:hover {
-      color: #ff6347;
+      color: var(--highlight-color);
+    }
+
+    #scrollToTop,
+    #scrollToBottom {
+      background: var(--button-bg);
+      border: 1px solid var(--button-border);
+      color: var(--text-color);
+    }
+
+    .navigation-buttons button {
+      background: var(--button-bg);
+      border: 1px solid var(--button-border);
+      color: var(--text-color);
     }
 
     .table-of-contents {
@@ -231,6 +261,12 @@
     }
   </style>
 </head>
+<body class="theme-graphite"> <!-- Добавляем класс темы по умолчанию -->
+  <!-- Добавляем кнопку переключения тем -->
+  <button id="themeToggle" style="position: fixed; top: 20px; right: 20px; padding: 8px 12px; background: var(--button-bg); border: 1px solid var(--button-border); color: var(--text-color); border-radius: 5px; cursor: pointer;">
+    🌓 Сменить тему
+  </button>
+
 <body>
   <header>
     <div class="container">
@@ -278,6 +314,26 @@
   <button id="scrollToBottom" onclick="scrollToBottom()">↓</button>
 
   <script>
+    // Добавляем обработчик переключения тем
+    document.getElementById('themeToggle').addEventListener('click', function() {
+      const body = document.body;
+      if (body.classList.contains('theme-graphite')) {
+        body.classList.remove('theme-graphite');
+        body.classList.add('theme-sepia');
+        localStorage.setItem('theme', 'sepia');
+      } else {
+        body.classList.remove('theme-sepia');
+        body.classList.add('theme-graphite');
+        localStorage.setItem('theme', 'graphite');
+      }
+    });
+
+    // При загрузке страницы проверяем сохраненную тему
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'graphite';
+      document.body.classList.add(`theme-${savedTheme}`);
+    });
+
     // Изменения для второй книги
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
