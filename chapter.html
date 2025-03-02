@@ -13,7 +13,9 @@
       --highlight-color: #A0CFFF;
       --button-bg: #2a2a2a;
       --button-border: #404040;
-      --sticker-height: 44px; /* Увеличено на 10% */
+      --sticker-height: 51px;
+      --vertical-gap: 10px; /* Расстояние между кнопками */
+      --font-size: 16px;
     }
 
     .theme-sepia {
@@ -24,6 +26,14 @@
       --button-border: #b0a898;
     }
 
+    /* Защита от копирования */
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
     /* Обновленные стили стикеров */
     .nav-sticker {
       position: fixed;
@@ -31,14 +41,11 @@
       background: var(--button-bg);
       border: 1px solid var(--button-border);
       color: var(--text-color);
-      width: 40px;
+      width: 75px;
       height: var(--sticker-height);
       border-radius: 8px 0 0 8px;
       cursor: pointer;
-      transition: 
-        transform 0.3s ease,
-        opacity 0.3s ease,
-        bottom 0.5s ease;
+      transition: transform 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -46,36 +53,64 @@
       font-family: 'Arial', sans-serif;
     }
 
-    #themeSticker { top: 20%; }
-    #homeSticker { top: calc(20% + 60px); }
-    #nextSticker { top: calc(20% + 120px); }
-    #tocSticker { top: calc(20% + 180px); }
-    #prevSticker { top: calc(20% + 240px); }
-    #scrollSticker { 
-      bottom: 20%;
-      transition: all 0.3s ease; 
+      #themeSticker { top: calc(10% + (var(--sticker-height) * 0)); }
+      #fontControls { top: calc(10% + (var(--sticker-height) * 1 + var(--vertical-gap))); }
+      #homeSticker { top: calc(10% + (var(--sticker-height) * 2 + var(--vertical-gap) * 2)); }
+      #prevSticker { top: calc(10% + (var(--sticker-height) * 3 + var(--vertical-gap) * 3)); }
+      #tocSticker { top: calc(10% + (var(--sticker-height) * 4 + var(--vertical-gap) * 4)); }
+      #nextSticker { top: calc(10% + (var(--sticker-height) * 5 + var(--vertical-gap) * 5)); }
+      #scrollSticker { bottom: 10%; }
+
+    .font-controls-container {
+      display: flex;
+      gap: 10px;
+      padding: 0 10px;
     }
 
-    #scrollSticker::after {
-      content: '↓';
-      transition: all 0.3s ease;
+    .font-btn {
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .at-bottom #scrollSticker::after {
-      content: '↑';
+    .font-btn:hover {
+      transform: scale(1.1);
     }
 
     .hidden-sticker {
       transform: translateX(100%);
-      opacity: 0;
     }
 
-    .force-visible {
-      transform: translateX(0) !important;
-      opacity: 1 !important;
+/* Адаптация для мобильных */
+     @media (max-width: 768px) {
+     :root {
+     --sticker-height: 34px;
+     --vertical-gap: 5px;
+      }
+
+      .nav-sticker {
+      width: 42px;
+      }
+
+      .chapter-content {
+        max-width: 95%;
+        padding: 10px;
+      }
+
+      .font-controls-container {
+        gap: 5px;
+        padding: 0 5px;
+      }
+
+      #themeSticker { top: calc(5% + (var(--sticker-height) * 0)); }
+      #fontControls { top: calc(5% + (var(--sticker-height) * 1 + var(--vertical-gap))); }
+      #homeSticker { top: calc(5% + (var(--sticker-height) * 2 + var(--vertical-gap) * 2)); }
+      #prevSticker { top: calc(5% + (var(--sticker-height) * 3 + var(--vertical-gap) * 3)); }
+      #tocSticker { top: calc(5% + (var(--sticker-height) * 4 + var(--vertical-gap) * 4)); }
+      #nextSticker { top: calc(5% + (var(--sticker-height) * 5 + var(--vertical-gap) * 5)); }
+      #scrollSticker { bottom: 5%; }
     }
 
-    /* Основные стили */
+    /* Остальные стили без изменений */
     .book-info span {
       font-weight: bold;
       text-decoration: underline;
@@ -93,7 +128,7 @@
       color: var(--text-color);
       line-height: 1.6;
       padding: 20px;
-      font-size: 16px;
+      font-size: var(--font-size);
       transition: background 0.3s, color 0.3s;
     }
 
@@ -167,48 +202,6 @@
       text-align: center;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .book-cover {
-        width: 80%;
-        max-width: 250px;
-        margin: 0 auto;
-      }
-
-      .book-info {
-        text-align: left;
-      }
-
-      .book-description {
-        max-width: 100%;
-      }
-
-      h3 {
-        margin: 20px 0;
-      }
-
-      .table-of-contents {
-        margin-top: 15px;
-      }
-
-      .nav-sticker {
-        width: 42px; /* Увеличено на 20% */
-        height: 42px;
-        border-radius: 8px 0 0 8px;
-      }
-      
-      #themeSticker { top: 15%; }
-      #homeSticker { top: calc(15% + 50px); }
-      #nextSticker { top: calc(15% + 100px); }
-      #tocSticker { top: calc(15% + 150px); }
-      #prevSticker { top: calc(15% + 200px); }
-      #scrollSticker { bottom: 15%; }
-    }
-
     .loader {
       display: none;
       border: 4px solid #f3f3f3;
@@ -251,7 +244,7 @@
     }
   </style>
 </head>
-<body class="theme-graphite">
+<body class="theme-graphite" oncopy="return false" oncut="return false" onpaste="return false">
   <header>
     <div class="container">
       <img src="images/book-cover_1.jpg" alt="Обложка книги Приди, меч!" class="book-cover">
@@ -286,83 +279,54 @@
     <div class="chapter-content" id="chapter-content"></div>
   </div>
 
-  <!-- Навигационные стикеры -->
+  <!-- Обновленные навигационные стикеры -->
   <div class="nav-sticker" id="themeSticker">☯</div>
+  <div class="nav-sticker" id="fontControls">
+    <div class="font-controls-container">
+      <span class="font-btn" onclick="adjustFontSize(1)">A+</span>
+      <span class="font-btn" onclick="adjustFontSize(-1)">A-</span>
+    </div>
+  </div>
   <div class="nav-sticker" id="homeSticker">⌂</div>
-  <div class="nav-sticker" id="nextSticker">→</div>
-  <div class="nav-sticker" id="tocSticker">≡</div>
   <div class="nav-sticker" id="prevSticker">←</div>
-  <div class="nav-sticker" id="scrollSticker"></div>
+  <div class="nav-sticker" id="tocSticker">≡</div>
+  <div class="nav-sticker" id="nextSticker">→</div>
+  <div class="nav-sticker" id="scrollSticker">↓</div>
 
   <script>
-    // Инициализация темы
+    // Управление видимостью стикеров
+    let stickersVisible = true;
+    document.body.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-sticker')) {
+        stickersVisible = !stickersVisible;
+        document.querySelectorAll('.nav-sticker').forEach(sticker => {
+          sticker.classList.toggle('hidden-sticker', !stickersVisible);
+        });
+      }
+    });
+
+    // Управление размером шрифта
+    function adjustFontSize(change) {
+      const minSize = 12;
+      const maxSize = 20;
+      let currentSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-size'));
+      currentSize = Math.min(maxSize, Math.max(minSize, currentSize + change));
+      document.documentElement.style.setProperty('--font-size', `${currentSize}px`);
+      localStorage.setItem('fontSize', currentSize);
+    }
+
+    // Инициализация размера шрифта
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      document.documentElement.style.setProperty('--font-size', `${savedFontSize}px`);
+    }
+
+    // Остальной функционал без изменений
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme') || 'graphite';
       document.body.classList.add(`theme-${savedTheme}`);
     });
 
-    // Обработчики стикеров
-    const stickers = document.querySelectorAll('.nav-sticker');
-    let lastScroll = 0;
-    let lastTap = 0;
-    let isStickersVisible = true;
-
-    // Обработчик двойного тапа
-    document.body.addEventListener('click', (e) => {
-      if (!e.target.closest('.nav-sticker')) {
-        const now = Date.now();
-        if (now - lastTap < 300) { // 300ms для двойного тапа
-          stickers.forEach(sticker => {
-            sticker.classList.toggle('force-visible');
-            isStickersVisible = !isStickersVisible;
-          });
-        }
-        lastTap = now;
-      }
-    });
-
-    // Обработчик скролла
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      
-      // Автоматическое скрытие/показ при скролле
-      if (isStickersVisible) {
-        stickers.forEach(sticker => {
-          if (currentScroll > lastScroll + 50) {
-            sticker.classList.add('hidden-sticker');
-          } else if (currentScroll < lastScroll - 20) {
-            sticker.classList.remove('hidden-sticker');
-          }
-        });
-      }
-
-      // Обновление состояния прокрутки
-      document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
-      lastScroll = currentScroll;
-    });
-
-    // Обработчики кликов
-    document.getElementById('themeSticker').addEventListener('click', toggleTheme);
-    document.getElementById('homeSticker').addEventListener('click', () => window.location.href='index.html');
-    document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
-    document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
-    document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
-    document.getElementById('scrollSticker').addEventListener('click', () => {
-      const currentScroll = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      currentScroll >= scrollHeight - 50 ? scrollToTop() : scrollToBottom();
-    });
-
-    // Функции темы
-    function toggleTheme() {
-      const currentTheme = localStorage.getItem('theme') || 'graphite';
-      const nextTheme = currentTheme === 'graphite' ? 'sepia' : 'graphite';
-      document.body.classList.replace(`theme-${currentTheme}`, `theme-${nextTheme}`);
-      localStorage.setItem('theme', nextTheme);
-    }
-
-    // Основной функционал
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
     const BOOK_PATH = 'chapters/Book1';
@@ -454,6 +418,22 @@
     function toggleLoader(show) {
       loader.style.display = show ? 'block' : 'none';
     }
+
+    document.getElementById('themeSticker').addEventListener('click', function() {
+      const currentTheme = localStorage.getItem('theme') || 'graphite';
+      const nextTheme = currentTheme === 'graphite' ? 'sepia' : 'graphite';
+      document.body.classList.replace(`theme-${currentTheme}`, `theme-${nextTheme}`);
+      localStorage.setItem('theme', nextTheme);
+    });
+
+    document.getElementById('homeSticker').addEventListener('click', () => window.location.href='index.html');
+    document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
+    document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
+    document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
+    document.getElementById('scrollSticker').addEventListener('click', () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      window.scrollY >= scrollHeight - 50 ? scrollToTop() : scrollToBottom();
+    });
   </script>
 </body>
 </html>
