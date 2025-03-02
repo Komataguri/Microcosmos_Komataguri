@@ -37,7 +37,8 @@
       cursor: pointer;
       transition: 
         transform 0.3s ease,
-        opacity 0.3s ease;
+        opacity 0.3s ease,
+        bottom 0.5s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -298,60 +299,48 @@
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme') || 'graphite';
       document.body.classList.add(`theme-${savedTheme}`);
-      updateScrollSticker();
     });
 
     // Обработчики стикеров
     const stickers = document.querySelectorAll('.nav-sticker');
+    let lastScroll = 0;
     let lastTap = 0;
     let isStickersVisible = true;
 
     // Обработчик двойного тапа
-    document.addEventListener('click', (e) => {
+    document.body.addEventListener('click', (e) => {
       if (!e.target.closest('.nav-sticker')) {
-        const currentTime = new Date().getTime();
-        const tapLength = currentTime - lastTap;
-        
-        if (tapLength < 500 && tapLength > 0) {
-          toggleStickersVisibility();
+        const now = Date.now();
+        if (now - lastTap < 300) { // 300ms для двойного тапа
+          stickers.forEach(sticker => {
+            sticker.classList.toggle('force-visible');
+            isStickersVisible = !isStickersVisible;
+          });
         }
-        lastTap = currentTime;
+        lastTap = now;
       }
     });
 
-    function toggleStickersVisibility() {
-      isStickersVisible = !isStickersVisible;
-      stickers.forEach(sticker => {
-        sticker.classList.toggle('hidden-sticker', !isStickersVisible);
-      });
-    }
-
     // Обработчик скролла
-    let lastScroll = 0;
     window.addEventListener('scroll', () => {
       const currentScroll = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       
-      // Автоматическое скрытие при скролле вниз
-      if (currentScroll > lastScroll + 50) {
-        stickers.forEach(sticker => sticker.classList.add('hidden-sticker'));
-        isStickersVisible = false;
-      } else if (currentScroll < lastScroll - 20) {
-        stickers.forEach(sticker => sticker.classList.remove('hidden-sticker'));
-        isStickersVisible = true;
+      // Автоматическое скрытие/показ при скролле
+      if (isStickersVisible) {
+        stickers.forEach(sticker => {
+          if (currentScroll > lastScroll + 50) {
+            sticker.classList.add('hidden-sticker');
+          } else if (currentScroll < lastScroll - 20) {
+            sticker.classList.remove('hidden-sticker');
+          }
+        });
       }
-      lastScroll = currentScroll;
 
       // Обновление состояния прокрутки
       document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
-      updateScrollSticker();
+      lastScroll = currentScroll;
     });
-
-    function updateScrollSticker() {
-      const scrollSticker = document.getElementById('scrollSticker');
-      const atBottom = document.body.classList.contains('at-bottom');
-      scrollSticker.dataset.direction = atBottom ? 'up' : 'down';
-    }
 
     // Обработчики кликов
     document.getElementById('themeSticker').addEventListener('click', toggleTheme);
@@ -359,16 +348,11 @@
     document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
     document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
     document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
-    document.getElementById('scrollSticker').addEventListener('click', handleScrollClick);
-
-    function handleScrollClick() {
-      const atBottom = document.body.classList.contains('at-bottom');
-      if (atBottom) {
-        scrollToTop();
-      } else {
-        scrollToBottom();
-      }
-    }
+    document.getElementById('scrollSticker').addEventListener('click', () => {
+      const currentScroll = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      currentScroll >= scrollHeight - 50 ? scrollToTop() : scrollToBottom();
+    });
 
     // Функции темы
     function toggleTheme() {
@@ -385,7 +369,7 @@
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
 
     let chapters = [];
-    let currentChapterIndex = Number(localStorage.getItem('lastChapter')) || 0;
+    let currentChapterIndex = localStorage.getItem('lastChapter') || 0;
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
@@ -402,7 +386,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadTableOfContents();
       if (localStorage.getItem('lastChapter')) {
-        loadChapter(currentChapterIndex);
+        loadChapter(Number(localStorage.getItem('lastChapter')));
       }
     });
 
