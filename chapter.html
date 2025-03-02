@@ -6,13 +6,14 @@
   <title>Приди, меч!</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    /* CSS переменные */
+    /* Обновленные CSS переменные */
     :root {
       --bg-color: #181818;
       --text-color: #E0E0E0;
       --highlight-color: #A0CFFF;
       --button-bg: #2a2a2a;
       --button-border: #404040;
+      --sticker-height: 44px; /* Увеличено на 10% */
     }
 
     .theme-sepia {
@@ -23,7 +24,7 @@
       --button-border: #b0a898;
     }
 
-    /* Стили для стикеров */
+    /* Обновленные стили стикеров */
     .nav-sticker {
       position: fixed;
       right: 0;
@@ -31,13 +32,12 @@
       border: 1px solid var(--button-border);
       color: var(--text-color);
       width: 40px;
-      height: 40px;
+      height: var(--sticker-height);
       border-radius: 8px 0 0 8px;
       cursor: pointer;
       transition: 
         transform 0.3s ease,
-        opacity 0.3s ease,
-        bottom 0.5s ease;
+        opacity 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -46,10 +46,10 @@
     }
 
     #themeSticker { top: 20%; }
-    #homeSticker { top: calc(20% + 50px); }
-    #nextSticker { top: calc(20% + 100px); }
-    #tocSticker { top: calc(20% + 150px); }
-    #prevSticker { top: calc(20% + 200px); }
+    #homeSticker { top: calc(20% + 60px); }
+    #nextSticker { top: calc(20% + 120px); }
+    #tocSticker { top: calc(20% + 180px); }
+    #prevSticker { top: calc(20% + 240px); }
     #scrollSticker { 
       bottom: 20%;
       transition: all 0.3s ease; 
@@ -57,16 +57,21 @@
 
     #scrollSticker::after {
       content: '↓';
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .at-bottom #scrollSticker::after {
-      transform: rotate(180deg);
+      content: '↑';
     }
 
     .hidden-sticker {
       transform: translateX(100%);
       opacity: 0;
+    }
+
+    .force-visible {
+      transform: translateX(0) !important;
+      opacity: 1 !important;
     }
 
     /* Основные стили */
@@ -190,16 +195,16 @@
       }
 
       .nav-sticker {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px 0 0 6px;
+        width: 42px; /* Увеличено на 20% */
+        height: 42px;
+        border-radius: 8px 0 0 8px;
       }
       
       #themeSticker { top: 15%; }
-      #homeSticker { top: calc(15% + 45px); }
-      #nextSticker { top: calc(15% + 90px); }
-      #tocSticker { top: calc(15% + 135px); }
-      #prevSticker { top: calc(15% + 180px); }
+      #homeSticker { top: calc(15% + 50px); }
+      #nextSticker { top: calc(15% + 100px); }
+      #tocSticker { top: calc(15% + 150px); }
+      #prevSticker { top: calc(15% + 200px); }
       #scrollSticker { bottom: 15%; }
     }
 
@@ -293,27 +298,60 @@
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme') || 'graphite';
       document.body.classList.add(`theme-${savedTheme}`);
+      updateScrollSticker();
     });
 
     // Обработчики стикеров
     const stickers = document.querySelectorAll('.nav-sticker');
-    let lastScroll = 0;
+    let lastTap = 0;
+    let isStickersVisible = true;
 
+    // Обработчик двойного тапа
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-sticker')) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        
+        if (tapLength < 500 && tapLength > 0) {
+          toggleStickersVisibility();
+        }
+        lastTap = currentTime;
+      }
+    });
+
+    function toggleStickersVisibility() {
+      isStickersVisible = !isStickersVisible;
+      stickers.forEach(sticker => {
+        sticker.classList.toggle('hidden-sticker', !isStickersVisible);
+      });
+    }
+
+    // Обработчик скролла
+    let lastScroll = 0;
     window.addEventListener('scroll', () => {
       const currentScroll = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       
-      stickers.forEach(sticker => {
-        if (currentScroll > lastScroll + 50) {
-          sticker.classList.add('hidden-sticker');
-        } else if (currentScroll < lastScroll - 20) {
-          sticker.classList.remove('hidden-sticker');
-        }
-      });
-
-      document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
+      // Автоматическое скрытие при скролле вниз
+      if (currentScroll > lastScroll + 50) {
+        stickers.forEach(sticker => sticker.classList.add('hidden-sticker'));
+        isStickersVisible = false;
+      } else if (currentScroll < lastScroll - 20) {
+        stickers.forEach(sticker => sticker.classList.remove('hidden-sticker'));
+        isStickersVisible = true;
+      }
       lastScroll = currentScroll;
+
+      // Обновление состояния прокрутки
+      document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
+      updateScrollSticker();
     });
+
+    function updateScrollSticker() {
+      const scrollSticker = document.getElementById('scrollSticker');
+      const atBottom = document.body.classList.contains('at-bottom');
+      scrollSticker.dataset.direction = atBottom ? 'up' : 'down';
+    }
 
     // Обработчики кликов
     document.getElementById('themeSticker').addEventListener('click', toggleTheme);
@@ -321,11 +359,16 @@
     document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
     document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
     document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
-    document.getElementById('scrollSticker').addEventListener('click', () => {
-      document.body.classList.contains('at-bottom') 
-        ? scrollToTop() 
-        : scrollToBottom();
-    });
+    document.getElementById('scrollSticker').addEventListener('click', handleScrollClick);
+
+    function handleScrollClick() {
+      const atBottom = document.body.classList.contains('at-bottom');
+      if (atBottom) {
+        scrollToTop();
+      } else {
+        scrollToBottom();
+      }
+    }
 
     // Функции темы
     function toggleTheme() {
@@ -342,7 +385,7 @@
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
 
     let chapters = [];
-    let currentChapterIndex = localStorage.getItem('lastChapter') || 0;
+    let currentChapterIndex = Number(localStorage.getItem('lastChapter')) || 0;
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
@@ -359,7 +402,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadTableOfContents();
       if (localStorage.getItem('lastChapter')) {
-        loadChapter(Number(localStorage.getItem('lastChapter')));
+        loadChapter(currentChapterIndex);
       }
     });
 
