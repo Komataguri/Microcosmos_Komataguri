@@ -6,54 +6,86 @@
   <title>Приди, меч!</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    /* Добавляем CSS переменные для тем */
+    /* CSS переменные */
     :root {
-      --bg-color: #181818;          /* Основной фон Graphite */
-      --text-color: #E0E0E0;        /* Основной текст */
-      --highlight-color: #A0CFFF;   /* Цвет выделения */
-      --button-bg: #2a2a2a;         /* Фон кнопок */
-      --button-border: #404040;     /* Рамка кнопок */
-    }
-
-    /* Стили для дневной темы */
-    .theme-sepia {
-      --bg-color: #F8F5E8;          /* Сепия фон */
-      --text-color: #5C4033;        /* Темно-коричневый текст */
-      --highlight-color: #9A3B3B;   /* Бордовый акцент */
-      --button-bg: #e0d8c8;         /* Светлый фон кнопок */
-      --button-border: #b0a898;     /* Светлая рамка кнопок */
-    }
-
-    /* Новая третья тема */
-    .theme-forest {
-      --bg-color: #181818;          /* Тот же фон что у Graphite */
-      --text-color: #538135;        /* Зеленоватый текст */
-      --highlight-color: #2e74b5;   /* Синее выделение */
+      --bg-color: #181818;
+      --text-color: #E0E0E0;
+      --highlight-color: #A0CFFF;
       --button-bg: #2a2a2a;
       --button-border: #404040;
     }
 
-    /* Добавлены стили для жирных подчеркнутых меток */
-    .book-info span {
-      font-weight: bold;
-      text-decoration: underline;
+    .theme-sepia {
+      --bg-color: #F8F5E8;
+      --text-color: #5C4033;
+      --highlight-color: #9A3B3B;
+      --button-bg: #e0d8c8;
+      --button-border: #b0a898;
     }
 
-    #scrollToBottom {
+    /* Навигационная панель */
+    .navigation-panel {
       position: fixed;
-      bottom: 5rem;
-      right: 2rem;
-      width: 40px;
-      height: 40px;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 999;
+      transition: transform 0.3s ease;
+    }
+
+    .navigation-panel.hidden {
+      transform: translateY(-50%) translateX(120%);
+    }
+
+    .nav-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--button-bg);
+      border: 1px solid var(--button-border);
+      color: var(--text-color);
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+
+    /* Кнопки прокрутки */
+    #scrollToTop,
+    #scrollToBottom {
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: all 0.3s ease;
       font-size: 24px;
-      z-index: 1000;
+    }
+
+    #scrollToBottom {
+      bottom: 5rem;
+      right: 2rem;
+    }
+
+    #scrollToTop {
+      bottom: 2rem;
+      right: 2rem;
+    }
+
+    /* Остальные стили */
+    .book-info span {
+      font-weight: bold;
+      text-decoration: underline;
     }
 
     * {
@@ -69,7 +101,7 @@
       line-height: 1.6;
       padding: 20px;
       font-size: 16px;
-      transition: background 0.3s, color 0.3s; /* Плавное переключение */
+      transition: background 0.3s, color 0.3s;
     }
 
     .container {
@@ -115,7 +147,6 @@
       font-size: 16px;
     }
 
-    /* Остальные стили с заменой цветов на переменные */
     .toc-item a {
       text-decoration: underline;
       color: var(--text-color);
@@ -124,19 +155,6 @@
 
     .toc-item a:hover {
       color: var(--highlight-color);
-    }
-
-    #scrollToTop,
-    #scrollToBottom {
-      background: var(--button-bg);
-      border: 1px solid var(--button-border);
-      color: var(--text-color);
-    }
-
-    .navigation-buttons button {
-      background: var(--button-bg);
-      border: 1px solid var(--button-border);
-      color: var(--text-color);
     }
 
     .table-of-contents {
@@ -178,6 +196,28 @@
       .table-of-contents {
         margin-top: 15px;
       }
+
+      .navigation-panel {
+        bottom: 90px;
+        top: auto;
+        right: 50%;
+        transform: translateX(50%);
+        flex-direction: row;
+      }
+      
+      .navigation-panel.hidden {
+        transform: translateX(50%) translateY(100%);
+      }
+      
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+      }
+
+      #scrollToBottom {
+        bottom: 8rem;
+      }
     }
 
     .loader {
@@ -189,30 +229,6 @@
       height: 40px;
       animation: spin 1s linear infinite;
       margin: 20px auto;
-    }
-
-    #scrollToTop {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #2a2a2a;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: all 0.3s ease;
-      border: 1px solid #404040;
-      color: #fff;
-      font-size: 24px;
-    }
-
-    #scrollToTop:hover {
-      opacity: 1;
-      transform: translateY(-3px);
     }
 
     @keyframes spin {
@@ -244,40 +260,20 @@
       margin: 15px 0;
       border-radius: 5px;
     }
-
-    .navigation-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .navigation-buttons button {
-      padding: 10px 20px;
-      background: #2a2a2a;
-      border: 1px solid #404040;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .navigation-buttons button:hover {
-      background: #3a3a3a;
-      border-color: #505050;
-    }
   </style>
 </head>
-<body class="theme-graphite"> <!-- Добавляем класс темы по умолчанию -->
-  <!-- Добавляем кнопку переключения тем -->
-  <button id="themeToggle" style="position: fixed; top: 20px; right: 20px; padding: 8px 12px; background: var(--button-bg); border: 1px solid var(--button-border); color: var(--text-color); border-radius: 5px; cursor: pointer;">
-    🌓 Сменить тему
-  </button>
-<body>
+<body class="theme-graphite">
+  <!-- Навигационная панель -->
+  <div class="navigation-panel">
+    <button class="nav-btn" id="themeToggle">☯</button>
+    <button class="nav-btn" onclick="window.location.href='index.html'">⌂</button>
+    <button class="nav-btn" onclick="navigateChapter(1)">→</button>
+    <button class="nav-btn" onclick="window.location.href='chapter.html'">≡</button>
+    <button class="nav-btn" onclick="navigateChapter(-1)">←</button>
+  </div>
+
   <header>
     <div class="container">
-      <!-- Исправленный путь к обложке -->
       <img src="images/book-cover_1.jpg" alt="Обложка книги Приди, меч!" class="book-cover">
       <div class="book-info">
         <h2 class="book-title">Приди, меч!</h2>
@@ -307,35 +303,37 @@
   </section>
 
   <div id="chapter-container" style="display: none;">
-    <!-- Верхние кнопки (4 штуки) -->
-    <div class="navigation-buttons">
-      <button onclick="window.location.href='index.html'">На главную</button>
-      <button onclick="navigateChapter(-1)">← Назад</button>
-      <button onclick="window.location.href='chapter.html'">К содержанию</button>
-      <button onclick="navigateChapter(1)">Вперед →</button>
-    </div>
-    
     <div class="chapter-content" id="chapter-content"></div>
-
-    <!-- Нижние кнопки (2 штуки) -->
-    <div class="navigation-buttons">
-      <button onclick="navigateChapter(-1)">← Назад</button>
-      <button onclick="navigateChapter(1)">Вперед →</button>
-    </div>
   </div>
 
-  <!-- Кнопки прокрутки -->
   <button id="scrollToTop" onclick="scrollToTop()">↑</button>
   <button id="scrollToBottom" onclick="scrollToBottom()">↓</button>
 
   <script>
-    // Обновленный обработчик тем
-    const themes = ['graphite', 'sepia', 'forest'];
+    // Обработчики навигационной панели
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const panel = document.querySelector('.navigation-panel');
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > lastScroll + 50) {
+        panel.classList.add('hidden');
+      } else if (currentScroll < lastScroll - 20) {
+        panel.classList.remove('hidden');
+      }
+      lastScroll = currentScroll;
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation-panel')) {
+        document.querySelector('.navigation-panel').classList.remove('hidden');
+      }
+    });
+
+    // Обработчик темы
     document.getElementById('themeToggle').addEventListener('click', function() {
       const currentTheme = localStorage.getItem('theme') || 'graphite';
-      const currentIndex = themes.indexOf(currentTheme);
-      const nextIndex = (currentIndex + 1) % themes.length;
-      const nextTheme = themes[nextIndex];
+      const nextTheme = currentTheme === 'graphite' ? 'sepia' : 'graphite';
       
       document.body.classList.remove(`theme-${currentTheme}`);
       document.body.classList.add(`theme-${nextTheme}`);
@@ -348,85 +346,58 @@
       document.body.classList.add(`theme-${savedTheme}`);
     });
 
+    // Остальной функционал
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
-    const BOOK_PATH = 'chapters/Book1'; // Добавлено
+    const BOOK_PATH = 'chapters/Book1';
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
 
-    // Функция прокрутки вниз
-    function scrollToBottom() {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-
-    // Обработчик скролла
-    window.addEventListener('DOMContentLoaded', () => {
-      loadTableOfContents();
-      
-      window.addEventListener('scroll', () => {
-        const scrollTopBtn = document.getElementById('scrollToTop');
-        const scrollBottomBtn = document.getElementById('scrollToBottom');
-        const position = window.scrollY;
-        
-        scrollTopBtn.style.display = position > 500 ? 'block' : 'none';
-        scrollBottomBtn.style.display = position < document.body.scrollHeight - 1000 ? 'block' : 'none';
-      });
-    });
-
-    // Остальной код без изменений
     let chapters = [];
     let currentChapterIndex = 0;
-
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
     const chapterContent = document.getElementById('chapter-content');
 
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadTableOfContents();
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    function handleScroll() {
+      const position = window.scrollY;
+      document.getElementById('scrollToTop').style.display = position > 500 ? 'block' : 'none';
+      document.getElementById('scrollToBottom').style.display = position < document.body.scrollHeight - 1000 ? 'block' : 'none';
+    }
+
     function toggleLoader(show) {
       loader.style.display = show ? 'block' : 'none';
-    }
-
-    function getChapterNumber(filename) {
-      const match = filename.match(/\d+/g);
-      return match ? parseInt(match[0]) : 0;
-    }
-
-    function updateChaptersList(files) {
-      return files
-        .filter(file => file.name.endsWith('.md'))
-        .sort((a, b) => getChapterNumber(a.name) - getChapterNumber(b.name));
     }
 
     async function loadTableOfContents() {
       try {
         toggleLoader(true);
-        const response = await fetch(
-          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BOOK_PATH}?t=${Date.now()}`
-        );
-        
-        if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
-        
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BOOK_PATH}?t=${Date.now()}`);
         const files = await response.json();
-        chapters = updateChaptersList(files);
+        chapters = files
+          .filter(file => file.name.endsWith('.md'))
+          .sort((a, b) => parseInt(a.name.match(/\d+/)[0]) - parseInt(b.name.match(/\d+/)[0]));
         
         tocList.innerHTML = chapters.map((chapter, index) => `
           <li class="toc-item">
-            <a href="javascript:void(0)" onclick="loadChapter(${index})">
-              ${chapter.name.replace('.md', '')}
-            </a>
+            <a onclick="loadChapter(${index})">${chapter.name.replace('.md', '')}</a>
           </li>
         `).join('');
-
       } catch (error) {
-        console.error('Ошибка:', error);
-        tocList.innerHTML = `
-          <li style="color: #ff4444">
-            ${error.message}<br>
-            <button onclick="location.reload()" style="margin-top: 10px; padding: 5px 10px;">Обновить</button>
-          </li>
-        `;
+        tocList.innerHTML = `<li style="color: #ff4444">${error.message}</li>`;
       } finally {
         toggleLoader(false);
       }
@@ -436,17 +407,12 @@
       try {
         toggleLoader(true);
         currentChapterIndex = index;
-        const chapter = chapters[index];
-        
-        const response = await fetch(BASE_URL + chapter.path);
-        if (!response.ok) throw new Error('Глава не найдена');
-        
+        const response = await fetch(BASE_URL + chapters[index].path);
         let markdown = await response.text();
         
-        markdown = markdown.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, path) => {
-          const filename = path.split('/').pop();
-          return `![${alt}](${BASE_URL}${BOOK_PATH}/images/${filename})`; // Исправлено
-        });
+        markdown = markdown.replace(/!\[(.*?)\]\((.*?)\)/g, (_, alt, path) => 
+          `![${alt}](${BASE_URL}${BOOK_PATH}/images/${path.split('/').pop()})`
+        );
         
         chapterContent.innerHTML = marked.parse(markdown);
         chapterContainer.style.display = 'block';
@@ -454,15 +420,7 @@
         document.querySelector('section').style.display = 'none';
         window.scrollTo(0, 0);
       } catch (error) {
-        console.error('Ошибка:', error);
-        chapterContent.innerHTML = `
-          <div style="color: #ff4444; text-align: center; padding: 50px">
-            ${error.message}<br>
-            <button onclick="window.location.reload()" style="margin-top: 20px; padding: 10px 20px;">
-              Назад к содержанию
-            </button>
-          </div>
-        `;
+        chapterContent.innerHTML = `<div style="color: #ff4444">${error.message}</div>`;
       } finally {
         toggleLoader(false);
       }
@@ -470,16 +428,7 @@
 
     function navigateChapter(direction) {
       const newIndex = currentChapterIndex + direction;
-      if (newIndex >= 0 && newIndex < chapters.length) {
-        loadChapter(newIndex);
-      }
-    }
-
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      if (newIndex >= 0 && newIndex < chapters.length) loadChapter(newIndex);
     }
   </script>
 </body>
