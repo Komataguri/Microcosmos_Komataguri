@@ -23,53 +23,66 @@
       --button-border: #b0a898;
     }
 
-    /* Стили для стикеров */
-    .nav-sticker {
+    /* Навигационная панель */
+    .navigation-panel {
       position: fixed;
-      right: 0;
-      background: var(--button-bg);
-      border: 1px solid var(--button-border);
-      color: var(--text-color);
-      width: 40px;
-      height: 40px;
-      border-radius: 8px 0 0 8px;
-      cursor: pointer;
-      transition: 
-        transform 0.3s ease,
-        opacity 0.3s ease,
-        bottom 0.5s ease;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
       z-index: 999;
-      font-family: 'Arial', sans-serif;
-    }
-
-    #themeSticker { top: 20%; }
-    #homeSticker { top: calc(20% + 50px); }
-    #nextSticker { top: calc(20% + 100px); }
-    #tocSticker { top: calc(20% + 150px); }
-    #prevSticker { top: calc(20% + 200px); }
-    #scrollSticker { 
-      bottom: 20%;
-      transition: all 0.3s ease; 
-    }
-
-    #scrollSticker::after {
-      content: '↓';
       transition: transform 0.3s ease;
     }
 
-    .at-bottom #scrollSticker::after {
-      transform: rotate(180deg);
+    .navigation-panel.hidden {
+      transform: translateY(-50%) translateX(120%);
     }
 
-    .hidden-sticker {
-      transform: translateX(100%);
-      opacity: 0;
+    .nav-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--button-bg);
+      border: 1px solid var(--button-border);
+      color: var(--text-color);
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Основные стили */
+    .nav-btn:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+
+    /* Кнопки прокрутки */
+    #scrollToTop,
+    #scrollToBottom {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    #scrollToBottom {
+      bottom: 5rem;
+      right: 2rem;
+    }
+
+    #scrollToTop {
+      bottom: 2rem;
+      right: 2rem;
+    }
+
+    /* Остальные стили */
     .book-info span {
       font-weight: bold;
       text-decoration: underline;
@@ -140,11 +153,6 @@
       transition: color 0.3s;
     }
 
-    .toc-item.active a {
-      color: var(--highlight-color);
-      font-weight: bold;
-    }
-
     .toc-item a:hover {
       color: var(--highlight-color);
     }
@@ -189,18 +197,27 @@
         margin-top: 15px;
       }
 
-      .nav-sticker {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px 0 0 6px;
+      .navigation-panel {
+        bottom: 90px;
+        top: auto;
+        right: 50%;
+        transform: translateX(50%);
+        flex-direction: row;
       }
       
-      #themeSticker { top: 15%; }
-      #homeSticker { top: calc(15% + 45px); }
-      #nextSticker { top: calc(15% + 90px); }
-      #tocSticker { top: calc(15% + 135px); }
-      #prevSticker { top: calc(15% + 180px); }
-      #scrollSticker { bottom: 15%; }
+      .navigation-panel.hidden {
+        transform: translateX(50%) translateY(100%);
+      }
+      
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+      }
+
+      #scrollToBottom {
+        bottom: 8rem;
+      }
     }
 
     .loader {
@@ -246,6 +263,15 @@
   </style>
 </head>
 <body class="theme-graphite">
+  <!-- Навигационная панель -->
+  <div class="navigation-panel">
+    <button class="nav-btn" id="themeToggle">☯</button>
+    <button class="nav-btn" onclick="window.location.href='index.html'">⌂</button>
+    <button class="nav-btn" onclick="navigateChapter(1)">→</button>
+    <button class="nav-btn" onclick="window.location.href='chapter.html'">≡</button>
+    <button class="nav-btn" onclick="navigateChapter(-1)">←</button>
+  </div>
+
   <header>
     <div class="container">
       <img src="images/book-cover_1.jpg" alt="Обложка книги Приди, меч!" class="book-cover">
@@ -280,69 +306,54 @@
     <div class="chapter-content" id="chapter-content"></div>
   </div>
 
-  <!-- Навигационные стикеры -->
-  <div class="nav-sticker" id="themeSticker">☯</div>
-  <div class="nav-sticker" id="homeSticker">⌂</div>
-  <div class="nav-sticker" id="nextSticker">→</div>
-  <div class="nav-sticker" id="tocSticker">≡</div>
-  <div class="nav-sticker" id="prevSticker">←</div>
-  <div class="nav-sticker" id="scrollSticker"></div>
+  <button id="scrollToTop" onclick="scrollToTop()">↑</button>
+  <button id="scrollToBottom" onclick="scrollToBottom()">↓</button>
 
   <script>
+    // Обработчики навигационной панели
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const panel = document.querySelector('.navigation-panel');
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > lastScroll + 50) {
+        panel.classList.add('hidden');
+      } else if (currentScroll < lastScroll - 20) {
+        panel.classList.remove('hidden');
+      }
+      lastScroll = currentScroll;
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation-panel')) {
+        document.querySelector('.navigation-panel').classList.remove('hidden');
+      }
+    });
+
+    // Обработчик темы
+    document.getElementById('themeToggle').addEventListener('click', function() {
+      const currentTheme = localStorage.getItem('theme') || 'graphite';
+      const nextTheme = currentTheme === 'graphite' ? 'sepia' : 'graphite';
+      
+      document.body.classList.remove(`theme-${currentTheme}`);
+      document.body.classList.add(`theme-${nextTheme}`);
+      localStorage.setItem('theme', nextTheme);
+    });
+
     // Инициализация темы
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme') || 'graphite';
       document.body.classList.add(`theme-${savedTheme}`);
     });
 
-    // Обработчики стикеров
-    const stickers = document.querySelectorAll('.nav-sticker');
-    let lastScroll = 0;
-
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      
-      stickers.forEach(sticker => {
-        if (currentScroll > lastScroll + 50) {
-          sticker.classList.add('hidden-sticker');
-        } else if (currentScroll < lastScroll - 20) {
-          sticker.classList.remove('hidden-sticker');
-        }
-      });
-
-      document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
-      lastScroll = currentScroll;
-    });
-
-    // Обработчики кликов
-    document.getElementById('themeSticker').addEventListener('click', toggleTheme);
-    document.getElementById('homeSticker').addEventListener('click', () => window.location.href='index.html');
-    document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
-    document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
-    document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
-    document.getElementById('scrollSticker').addEventListener('click', () => {
-      document.body.classList.contains('at-bottom') 
-        ? scrollToTop() 
-        : scrollToBottom();
-    });
-
-    // Функции темы
-    function toggleTheme() {
-      const currentTheme = localStorage.getItem('theme') || 'graphite';
-      const nextTheme = currentTheme === 'graphite' ? 'sepia' : 'graphite';
-      document.body.classList.replace(`theme-${currentTheme}`, `theme-${nextTheme}`);
-      localStorage.setItem('theme', nextTheme);
-    }
-
-    // Основной функционал
+    // Остальной функционал
     const REPO_OWNER = 'Komataguri';
     const REPO_NAME = 'Microcosmos_Komataguri';
     const BOOK_PATH = 'chapters/Book1';
     const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
 
     let chapters = [];
-    let currentChapterIndex = localStorage.getItem('lastChapter') || 0;
+    let currentChapterIndex = 0;
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
@@ -358,10 +369,18 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadTableOfContents();
-      if (localStorage.getItem('lastChapter')) {
-        loadChapter(Number(localStorage.getItem('lastChapter')));
-      }
+      window.addEventListener('scroll', handleScroll);
     });
+
+    function handleScroll() {
+      const position = window.scrollY;
+      document.getElementById('scrollToTop').style.display = position > 500 ? 'block' : 'none';
+      document.getElementById('scrollToBottom').style.display = position < document.body.scrollHeight - 1000 ? 'block' : 'none';
+    }
+
+    function toggleLoader(show) {
+      loader.style.display = show ? 'block' : 'none';
+    }
 
     async function loadTableOfContents() {
       try {
@@ -388,8 +407,6 @@
       try {
         toggleLoader(true);
         currentChapterIndex = index;
-        document.title = chapters[index].name.replace('.md', '') + ' | Приди, меч!';
-        
         const response = await fetch(BASE_URL + chapters[index].path);
         let markdown = await response.text();
         
@@ -402,12 +419,6 @@
         document.querySelector('header').style.display = 'none';
         document.querySelector('section').style.display = 'none';
         window.scrollTo(0, 0);
-
-        document.querySelectorAll('.toc-item').forEach(item => {
-          item.classList.remove('active');
-        });
-        document.querySelectorAll('.toc-item')[index].classList.add('active');
-        localStorage.setItem('lastChapter', currentChapterIndex);
       } catch (error) {
         chapterContent.innerHTML = `<div style="color: #ff4444">${error.message}</div>`;
       } finally {
@@ -417,15 +428,7 @@
 
     function navigateChapter(direction) {
       const newIndex = currentChapterIndex + direction;
-      if (newIndex >= 0 && newIndex < chapters.length) {
-        loadChapter(newIndex);
-      } else {
-        alert(direction === 1 ? 'Это последняя глава' : 'Это первая глава');
-      }
-    }
-
-    function toggleLoader(show) {
-      loader.style.display = show ? 'block' : 'none';
+      if (newIndex >= 0 && newIndex < chapters.length) loadChapter(newIndex);
     }
   </script>
 </body>

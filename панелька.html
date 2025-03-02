@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- ... остальные метатеги и подключения ... -->
+  <style>
+    /* Стили для стикеров */
+    .nav-sticker {
+      position: fixed;
+      right: 0;
+      background: var(--button-bg);
+      border: 1px solid var(--button-border);
+      color: var(--text-color);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px 0 0 8px;
+      cursor: pointer;
+      transition: 
+        transform 0.3s ease,
+        opacity 0.3s ease,
+        bottom 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    /* Позиционирование стикеров */
+    #themeSticker { top: 20%; }
+    #homeSticker { top: calc(20% + 50px); }
+    #nextSticker { top: calc(20% + 100px); }
+    #tocSticker { top: calc(20% + 150px); }
+    #prevSticker { top: calc(20% + 200px); }
+    #scrollSticker { 
+      bottom: 20%;
+      transition: all 0.3s ease; 
+    }
+
+    /* Анимация скролл-кнопки */
+    #scrollSticker::after {
+      content: '↓';
+      transition: transform 0.3s ease;
+    }
+    .at-top #scrollSticker::after {
+      transform: rotate(0deg);
+    }
+    .at-bottom #scrollSticker::after {
+      transform: rotate(180deg);
+    }
+
+    /* Скрытие при скролле */
+    .hidden-sticker {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    /* Мобильная адаптация */
+    @media (max-width: 768px) {
+      .nav-sticker {
+        width: 35px;
+        height: 35px;
+        border-radius: 6px 0 0 6px;
+      }
+      
+      #themeSticker { top: 15%; }
+      #homeSticker { top: calc(15% + 45px); }
+      #nextSticker { top: calc(15% + 90px); }
+      #tocSticker { top: calc(15% + 135px); }
+      #prevSticker { top: calc(15% + 180px); }
+      #scrollSticker { bottom: 15%; }
+    }
+  </style>
+</head>
+<body class="theme-graphite">
+  <!-- Отдельные стикеры -->
+  <div class="nav-sticker" id="themeSticker">☯</div>
+  <div class="nav-sticker" id="homeSticker">⌂</div>
+  <div class="nav-sticker" id="nextSticker">→</div>
+  <div class="nav-sticker" id="tocSticker">≡</div>
+  <div class="nav-sticker" id="prevSticker">←</div>
+  <div class="nav-sticker" id="scrollSticker"></div>
+
+  <!-- ... остальная разметка ... -->
+
+  <script>
+    let lastScroll = 0;
+    const stickers = document.querySelectorAll('.nav-sticker');
+    
+    // Обработчик скролла
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      // Скрытие/показ стикеров
+      stickers.forEach(sticker => {
+        if (currentScroll > lastScroll + 50) {
+          sticker.classList.add('hidden-sticker');
+        } else if (currentScroll < lastScroll - 20) {
+          sticker.classList.remove('hidden-sticker');
+        }
+      });
+
+      // Обновление состояния скролла
+      document.body.classList.toggle('at-bottom', currentScroll >= scrollHeight - 50);
+      document.body.classList.toggle('at-top', currentScroll <= 50);
+      
+      lastScroll = currentScroll;
+    });
+
+    // Обработчики кликов
+    document.getElementById('themeSticker').addEventListener('click', toggleTheme);
+    document.getElementById('homeSticker').addEventListener('click', () => window.location.href='index.html');
+    document.getElementById('nextSticker').addEventListener('click', () => navigateChapter(1));
+    document.getElementById('tocSticker').addEventListener('click', () => window.location.href='chapter.html');
+    document.getElementById('prevSticker').addEventListener('click', () => navigateChapter(-1));
+    document.getElementById('scrollSticker').addEventListener('click', () => {
+      document.body.classList.contains('at-bottom') 
+        ? scrollToTop() 
+        : scrollToBottom();
+    });
+
+    // Остальные функции без изменений
+  </script>
+</body>
+</html>
