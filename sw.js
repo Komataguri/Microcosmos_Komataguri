@@ -47,6 +47,13 @@ self.addEventListener('fetch', (event) => {
     fetch(request).then(networkResponse => {
       // обновляем кэш только успешные ответы
       if (networkResponse && networkResponse.status === 200) {
+// --- кешируем динамические изображения глав отдельно ---
+const url = new URL(request.url);
+if (url.pathname.includes('/chapters/') && url.pathname.match(/\.(png|jpg|jpeg|gif|webp)$/)) {
+  caches.open(CACHE_NAME).then(cache => {
+    cache.put(request, networkResponse.clone()).catch(() => {});
+  });
+}
         const clone = networkResponse.clone();
         caches.open(CACHE_NAME).then(cache => {
           cache.put(request, clone).catch(() => {});
