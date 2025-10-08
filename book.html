@@ -172,7 +172,7 @@ pre code { white-space: pre-wrap; word-break: break-word; }
 
 <script>
 (function() {
-  // --- Переменные DOM
+  // === Переменные DOM и константы ===
   const REPO_OWNER = 'Komataguri';
   const REPO_NAME = 'Microcosmos_Komataguri';
   const BASE_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/`;
@@ -181,33 +181,33 @@ pre code { white-space: pre-wrap; word-break: break-word; }
   const chapterContainer = document.getElementById('chapter-container');
   const chapterContent = document.getElementById('chapter-content');
   const stickers = document.querySelectorAll('.nav-sticker');
-const scrollSticker = document.getElementById('scrollSticker');
+  const scrollSticker = document.getElementById('scrollSticker');
+  const progressBar = document.getElementById('progressBar');
 
-scrollSticker.addEventListener('click', () => {
-  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-  if(window.scrollY >= scrollHeight - 50) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    window.scrollTo({ top: scrollHeight, behavior: 'smooth' });
-  }
-});
+  // === Прокрутка вверх/вниз с виброоткликом ===
+  scrollSticker.addEventListener('click', () => {
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY >= scrollHeight - 50) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+    }
+    if (navigator.vibrate) navigator.vibrate(30);
+  });
 
-  // запрет копирования, вырезания и вставки
-  document.body.addEventListener('copy', e => e.preventDefault());
-  document.body.addEventListener('cut', e => e.preventDefault());
-  document.body.addEventListener('paste', e => e.preventDefault());
+  // === Защита от копирования ===
+  ['copy', 'cut', 'paste'].forEach(evt => document.body.addEventListener(evt, e => e.preventDefault()));
 
   let stickersVisible = true;
   let chapters = [];
   let currentChapterIndex = Number(localStorage.getItem('lastChapter') || 0);
 
-  // --- Универсальный debounce
+  // === Debounce ===
   function debounce(func, delay = 200) {
-    let timeoutId;
+    let timeout;
     return function(...args) {
-      const context = this;
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(context, args), delay);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), delay);
     };
   }
 
@@ -249,88 +249,46 @@ const BOOKS = {
   }
 };
 
-  // --- Определение текущей книги
+  // === Определяем текущую книгу ===
   const params = new URLSearchParams(window.location.search);
-  let bookKey = params.get('book') || 'Book1';
+  const bookKey = params.get('book') || 'Book1';
   const BOOK = BOOKS[bookKey];
-  if (!BOOK) {
-    document.body.innerHTML = `<h2 style="color:#ff5555;text-align:center;margin-top:40px;">Книга "${bookKey}" не найдена</h2>`;
-    throw new Error('Неизвестная книга');
-  }
-
-  // --- Применяем данные книги в интерфейс
-  document.title = BOOK.title;
-  const info = document.querySelector('.book-info');
-  if (info && BOOK) {
-    info.innerHTML = `
-      <h2 class="book-title">${BOOK.title}</h2>
-      <p><span class="label">Автор:</span> ${BOOK.author}</p>
-      <p><span class="label">Год выпуска:</span> ${BOOK.year}</p>
-      <p><span class="label">Количество глав:</span> ${BOOK.chaptersCount || '—'}</p>
-      <p><span class="label">Альтернативное название:</span> ${BOOK.alt}</p>
-      <p><span class="label">Жанры:</span> ${BOOK.genres}</p>
-      <p><span class="label">Тэги:</span> ${BOOK.tags}</p>
-      <p class="book-description"><span class="label">Аннотация:</span> ${BOOK.description}</p>
-    `;
-    document.querySelector('.book-cover').src = BOOK.cover;
-  }
-
+  if (!BOOK) return alert('Книга не найдена');
   const BOOK_PATH = BOOK.path;
 
-  // --- Вспомогательные функции
-  function extractChapterNumberString(file) {
-    if (!file?.name) return null;
-    const m = file.name.match(/Глава\s*([0-9]+)/);
+  // === Применяем данные книги в интерфейс ===
+  document.title = BOOK.title;
+  const info = document.querySelector('.book-info');
+  info.innerHTML = `
+    <h2 class="book-title">${BOOK.title}</h2>
+    <p><span class="label">Автор:</span> ${BOOK.author}</p>
+    <p><span class="label">Год выпуска:</span> ${BOOK.year}</p>
+    <p><span class="label">Количество глав:</span> ${BOOK.chaptersCount}</p>
+    <p><span class="label">Жанры:</span> ${BOOK.genres}</p>
+    <p class="book-description"><span class="label">Аннотация:</span> ${BOOK.description}</p>
+  `;
+  document.querySelector('.book-cover').src = BOOK.cover;
+
+  // === Вспомогательные функции ===
+  function extractChapterNumberString(f) {
+    const m = f?.name.match(/Глава\s*([0-9]+)/);
     return m ? m[1] : null;
   }
 
-  function extractChapterNumber(file) {
-    const s = extractChapterNumberString(file);
-    return s !== null ? Number(s) : null;
-  }
-
-  function getChapterFromURL() {
-    const q = new URLSearchParams(window.location.search).get('chapter');
-    if (!q) return null;
-    for (let i = 0; i < chapters.length; i++) {
-      const s = extractChapterNumberString(chapters[i]);
-      if (s !== null && s === q) return i;
-    }
-    if (/^\d+$/.test(q)) {
-      const num = Number(q);
-      for (let i = 0; i < chapters.length; i++) {
-        const n = extractChapterNumber(chapters[i]);
-        if (n !== null && n === num) return i;
-      }
-    }
-    try {
-      const decoded = decodeURIComponent(q);
-      for (let i = 0; i < chapters.length; i++) {
-        const nameNoExt = chapters[i].name.replace(/\.md$/i, '');
-        if (nameNoExt === decoded) return i;
-        const nameWithoutPrefix = nameNoExt.replace(/^Глава\s*\d+\.\s*/i, '');
-        if (nameWithoutPrefix === decoded) return i;
-      }
-    } catch (e) {}
-    return null;
-  }
-
   function updateURL(index) {
-    if (!chapters) return;
-    if (index < 0 || index >= chapters.length) return;
     const url = new URL(window.location);
-    const numStr = extractChapterNumberString(chapters[index]);
-    if (numStr !== null) url.searchParams.set('chapter', numStr);
-    else url.searchParams.set('chapter', encodeURIComponent(chapters[index].name.replace(/\.md$/i, '')));
+    const num = extractChapterNumberString(chapters[index]);
+    url.searchParams.set('chapter', num);
     window.history.replaceState({}, '', url);
   }
 
-  function rewriteImagePaths(markdown) {
-    return markdown.replace(/!\[(.*?)\]\((.*?)\)/g, (_, alt, path) =>
-      `![${alt}](${BASE_URL}${BOOK_PATH}/${path.replace(/^\.\/?/, '')})`
+  function rewriteImagePaths(md) {
+    return md.replace(/!\[(.*?)\]\((.*?)\)/g, (_, alt, path) =>
+      `<img src="${BASE_URL}${BOOK_PATH}/${path.replace(/^\.\/?/, '')}" alt="${alt}" loading="lazy">`
     );
   }
 
+  // === Кэширование шрифта ===
   function adjustFontSize(change) {
     const min = 12, max = 22;
     let curr = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-size')) || 16;
@@ -338,201 +296,165 @@ const BOOKS = {
     document.documentElement.style.setProperty('--font-size', `${curr}px`);
     localStorage.setItem('fontSize', curr);
   }
-
   function resetSettings() {
-    const def = 16;
-    document.documentElement.style.setProperty('--font-size', `${def}px`);
-    localStorage.setItem('fontSize', def);
+    document.documentElement.style.setProperty('--font-size', '16px');
+    localStorage.setItem('fontSize', 16);
   }
 
-  function toggleLoader(show) { loader.style.display = show ? 'block' : 'none'; }
+  function toggleLoader(show) {
+    loader.style.display = show ? 'block' : 'none';
+  }
 
-  const saveScrollDebounced = debounce(() => {
-    if (!chapters || !chapters[currentChapterIndex]) return;
-    localStorage.setItem(`scroll_${chapters[currentChapterIndex].name}`, window.scrollY);
-  }, 300);
+  // === Прогресс-бар ===
+  function updateProgressBar() {
+    if (!chapterContainer || chapterContainer.style.display === 'none') {
+      progressBar.style.width = '0%';
+      return;
+    }
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = percent + '%';
+  }
 
-  const onScroll = debounce(() => {
+  // === Подсветка активного заголовка ===
+  function highlightCurrentTOC() {
+    if (!chapterContainer || chapterContainer.style.display === 'none') return;
+    const headings = chapterContent.querySelectorAll('h1,h2,h3');
+    let current = 0;
+    const midpoint = window.scrollY + window.innerHeight / 2;
+    headings.forEach((h, i) => {
+      if (midpoint >= h.offsetTop) current = i;
+    });
+    document.querySelectorAll('.toc-item').forEach(el => el.classList.remove('active'));
+    const target = Array.from(tocList.children).find(li => li.textContent.trim() === headings[current]?.textContent.trim());
+    if (target) target.classList.add('active');
+  }
+
+  window.addEventListener('scroll', debounce(() => {
+    updateProgressBar();
+    highlightCurrentTOC();
     const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
     scrollSticker.innerHTML = (window.scrollY >= scrollHeight - 50) ? '↑' : '↓';
-    saveScrollDebounced();
-  }, 80);
+  }, 80));
 
-  const toggleStickersDebounced = debounce(() => {
-    stickersVisible = !stickersVisible;
-    stickers.forEach(s => s.classList.toggle('hidden-sticker', !stickersVisible));
-  }, 180);
-
-// --- Прогресс-бар прокрутки
-const progressBar = document.getElementById('progressBar');
-function updateProgressBar() {
-  if(!chapterContainer || chapterContainer.style.display==='none') {
-    progressBar.style.width='0%';
-    return;
-  }
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-  progressBar.style.width = percent + '%';
-}
-
-// --- Авто-подсветка текущего TOC по скроллу
-function highlightCurrentTOC() {
-  if(!chapterContainer || chapterContainer.style.display==='none') return;
-  const headings = chapterContent.querySelectorAll('h1,h2,h3');
-  let currentHeadingIndex = 0;
-  headings.forEach((h,i)=>{
-    if(window.scrollY + 60 >= h.offsetTop) currentHeadingIndex = i;
-  });
-  document.querySelectorAll('.toc-item').forEach(item => item.classList.remove('active'));
-  if(headings[currentHeadingIndex]) {
-    const tocItem = Array.from(tocList.children).find(li => li.textContent.trim() === headings[currentHeadingIndex].textContent.trim());
-    if(tocItem) tocItem.classList.add('active');
-  }
-}
-
-// --- Добавляем в существующий scroll listener
-window.addEventListener('scroll', () => {
-  updateProgressBar();
-  highlightCurrentTOC();
-});
-
+  // === Скрытие/показ стикеров ===
   document.body.addEventListener('click', e => {
     if (e.target.closest('.nav-sticker')) return;
-    toggleStickersDebounced();
+    stickersVisible = !stickersVisible;
+    stickers.forEach(s => s.classList.toggle('hidden-sticker', !stickersVisible));
   });
 
-  window.addEventListener('scroll', onScroll);
-
+  // === TOC ===
   async function loadTableOfContents() {
     try {
-      chapterContent.innerHTML = '';
       toggleLoader(true);
       const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BOOK_PATH}?t=${Date.now()}`);
       if (!res.ok) throw new Error(`Ошибка HTTP: ${res.status}`);
       chapters = (await res.json())
         .filter(f => f.name.endsWith('.md'))
-        .sort((a, b) => {
-          const na = (a.name.match(/\d+/) || [0])[0];
-          const nb = (b.name.match(/\d+/) || [0])[0];
-          return parseInt(na) - parseInt(nb);
-        });
-      tocList.innerHTML = chapters.map((c, i) =>
-        `<li class="toc-item"><a data-index="${i}">${c.name.replace('.md','')}</a></li>`
-      ).join('');
-      document.querySelectorAll('.toc-item a').forEach(a =>
-        a.addEventListener('click', () => loadChapter(Number(a.dataset.index)))
-      );
-    } catch(e) {
-      tocList.innerHTML = `<li style="color:#ff4444">${e.message}</li>`;
+        .sort((a, b) => (parseInt(a.name.match(/\d+/)) || 0) - (parseInt(b.name.match(/\d+/)) || 0));
+      tocList.innerHTML = chapters.map((c, i) => `<li class="toc-item"><a data-index="${i}">${c.name.replace('.md','')}</a></li>`).join('');
+      document.querySelectorAll('.toc-item a').forEach(a => a.addEventListener('click', () => {
+        localStorage.setItem('tocScroll', window.scrollY);
+        loadChapter(Number(a.dataset.index));
+      }));
+    } catch (e) {
+      tocList.innerHTML = `<li style="color:#ff4444">Ошибка загрузки: ${e.message}</li>`;
     } finally {
       toggleLoader(false);
     }
   }
 
+  // === Загрузка главы (с кэшированием и обработкой ошибок) ===
   async function loadChapter(index) {
     try {
-      chapterContent.innerHTML = '';
       toggleLoader(true);
       currentChapterIndex = index;
       updateURL(index);
       localStorage.setItem('lastChapter', currentChapterIndex);
 
       const chapter = chapters[index];
-      if(!chapter) throw new Error('Глава не найдена');
-      document.title = chapter.name.replace('.md','') + ' | ' + BOOK.title;
+      if (!chapter) throw new Error('Глава не найдена');
 
-      const res = await fetch(BASE_URL + chapter.path);
-      if(!res.ok) throw new Error('Глава не найдена');
+      document.title = `${chapter.name.replace('.md','')} | ${BOOK.title}`;
 
-      let md = await res.text();
+      // Проверяем кэш
+      let md = localStorage.getItem(chapter.name);
+      if (!md) {
+        const res = await fetch(BASE_URL + chapter.path);
+        if (!res.ok) throw new Error(`Ошибка загрузки главы: ${res.status}`);
+        md = await res.text();
+        localStorage.setItem(chapter.name, md);
+      }
+
       md = rewriteImagePaths(md);
       chapterContent.innerHTML = marked.parse(md);
       hljs.highlightAll();
+
       chapterContent.classList.remove('visible');
-      setTimeout(()=>chapterContent.classList.add('visible'),10);
+      setTimeout(() => chapterContent.classList.add('visible'), 10);
+      chapterContainer.style.display = 'block';
+      document.querySelector('header').style.display = 'none';
+      document.querySelector('section').style.display = 'none';
 
-      chapterContainer.style.display='block';
-      document.querySelector('header').style.display='none';
-      document.querySelector('section').style.display='none';
-
-      document.querySelectorAll('.toc-item').forEach(i=>i.classList.remove('active'));
-      const tocItems=document.querySelectorAll('.toc-item');
-      if(tocItems[index]) tocItems[index].classList.add('active');
-
-      const key=`scroll_${chapters[currentChapterIndex].name}`;
-      const saved=Number(localStorage.getItem(key)||0);
-      setTimeout(()=>window.scrollTo(0,saved>0?saved:0),50);
-    } catch(e) {
-      chapterContent.innerHTML=`<div style="color:#ff4444">${e.message}</div>`;
+      const key = `scroll_${chapter.name}`;
+      const saved = Number(localStorage.getItem(key) || 0);
+      setTimeout(() => window.scrollTo(0, saved), 50);
+    } catch (e) {
+      chapterContent.innerHTML = `
+        <div style="color:#ff4444;text-align:center;">
+          Ошибка загрузки главы.<br>${e.message}<br><br>
+          <button onclick="location.reload()">🔄 Попробовать снова</button>
+        </div>`;
     } finally {
       toggleLoader(false);
     }
   }
 
-  function navigateChapter(dir){
+  // === Навигация и возврат в TOC с сохранением позиции ===
+  function navigateChapter(dir) {
     const newIndex = currentChapterIndex + dir;
-    if(newIndex>=0 && newIndex<chapters.length) loadChapter(newIndex);
-    else alert(dir===1?'Это последняя глава':'Это первая глава');
+    if (newIndex >= 0 && newIndex < chapters.length) loadChapter(newIndex);
+    else alert(dir === 1 ? 'Это последняя глава' : 'Это первая глава');
   }
 
-  function showTOC(){
-    chapterContainer.style.display='none';
-    document.querySelector('header').style.display='block';
-    document.querySelector('section').style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
+  function showTOC() {
+    const savedTOCScroll = Number(localStorage.getItem('tocScroll') || 0);
+    chapterContainer.style.display = 'none';
+    document.querySelector('header').style.display = 'block';
+    document.querySelector('section').style.display = 'block';
+    setTimeout(() => window.scrollTo(0, savedTOCScroll), 100);
   }
 
-  // === Обработчики стикеров ===
-  const themeSticker = document.getElementById('themeSticker');
-  if(themeSticker) themeSticker.addEventListener('click', () => {
-      const current = localStorage.getItem('theme') || 'graphite';
-      const next = current === 'graphite' ? 'sepia' : 'graphite';
-      document.body.classList.replace(`theme-${current}`, `theme-${next}`);
-      localStorage.setItem('theme', next);
-  });
+  // === Стикеры ===
+  document.getElementById('themeSticker').onclick = () => {
+    const curr = localStorage.getItem('theme') || 'graphite';
+    const next = curr === 'graphite' ? 'sepia' : 'graphite';
+    document.body.classList.replace(`theme-${curr}`, `theme-${next}`);
+    localStorage.setItem('theme', next);
+  };
+  document.getElementById('fontInc').onclick = () => adjustFontSize(1);
+  document.getElementById('fontDec').onclick = () => adjustFontSize(-1);
+  document.getElementById('fontReset').onclick = () => resetSettings();
+  document.getElementById('homeSticker').onclick = () => { window.location.href = 'index.html'; };
+  document.getElementById('prevSticker').onclick = () => navigateChapter(-1);
+  document.getElementById('nextSticker').onclick = () => navigateChapter(1);
+  document.getElementById('tocSticker').onclick = showTOC;
 
-  const fontInc = document.getElementById('fontInc');
-  if(fontInc) fontInc.addEventListener('click', () => adjustFontSize(1));
-  const fontDec = document.getElementById('fontDec');
-  if(fontDec) fontDec.addEventListener('click', () => adjustFontSize(-1));
-  const fontReset = document.getElementById('fontReset');
-  if(fontReset) fontReset.addEventListener('click', () => resetSettings());
-
-  const homeSticker = document.getElementById('homeSticker');
-  if(homeSticker) homeSticker.addEventListener('click', () => {
-      const url = new URL(window.location);
-      url.searchParams.delete('chapter');
-      window.location.href='index.html';
-  });
-
-  const prevSticker = document.getElementById('prevSticker');
-  if(prevSticker) prevSticker.addEventListener('click',()=>navigateChapter(-1));
-  const nextSticker = document.getElementById('nextSticker');
-  if(nextSticker) nextSticker.addEventListener('click',()=>navigateChapter(1));
-  const tocSticker = document.getElementById('tocSticker');
-  if(tocSticker) tocSticker.addEventListener('click',showTOC);
-
-  // --- DOMContentLoaded
+  // === Инициализация ===
   window.addEventListener('DOMContentLoaded', async () => {
-    const savedTheme = localStorage.getItem('theme') || 'graphite';
-    document.body.classList.add(`theme-${savedTheme}`);
-
-    const savedFontSize = localStorage.getItem('fontSize');
-    if(savedFontSize) document.documentElement.style.setProperty('--font-size', `${savedFontSize}px`);
+    document.body.classList.add(`theme-${localStorage.getItem('theme') || 'graphite'}`);
+    const fs = localStorage.getItem('fontSize');
+    if (fs) document.documentElement.style.setProperty('--font-size', `${fs}px`);
 
     await loadTableOfContents();
-    const ch = getChapterFromURL();
-    if (ch !== null && chapters[ch]) loadChapter(ch);
-    else showTOC();
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js', { scope: './' })
-        .then(reg => console.log('Service worker зарегистрирован:', reg.scope))
-        .catch(err => console.warn('Не удалось зарегистрировать service worker:', err));
+    const q = new URLSearchParams(window.location.search).get('chapter');
+    if (q) {
+      const i = chapters.findIndex(c => c.name.includes(q));
+      if (i >= 0) loadChapter(i);
     }
   });
-
 })();
 </script>
 </body>
