@@ -2,8 +2,7 @@ const CACHE_NAME = 'chitalka-cache-v1';
 const ASSETS_TO_CACHE = [
   '/', // если сайт хостится в корне
   '/index.html',
-  '/chapter.html',
-  '/chapter2.html',
+  '/book.html',
   '/styles.css', // если у тебя отдельный файл стилей — иначе можно удалить
   // можно добавить обложки и прочие статические ресурсы
 ];
