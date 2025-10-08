@@ -860,10 +860,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Регистрация сервис-воркера (PWA)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(reg => {
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js', { scope: './' })
+    .then(reg => {
       console.log('Service worker зарегистрирован:', reg.scope);
-    }).catch(err => {
+    })
+    .catch(err => {
       console.warn('Не удалось зарегистрировать service worker:', err);
     });
   }
