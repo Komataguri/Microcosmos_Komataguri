@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOMA TRANSLATE — библиотека</title>
+
+<!-- Стильный шрифт -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0c0c0c;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ================== HERO ================== */
+
+.header {
+  position: relative;
+  min-height: 100vh;
+  padding: 25px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: -1;
+}
+
+/* Логотип и соцсети сверху */
+.top-bar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.logo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.6rem;
+  background: linear-gradient(90deg, #ffb347, #ffcc33);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  padding: 6px 14px;
+  border: 1px solid white;
+  border-radius: 25px;
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+
+.social-links a:hover {
+  background: white;
+  color: black;
+}
+
+/* Стильная надпись */
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.6rem;
+  text-align: center;
+  background: linear-gradient(90deg, #ffb347, #ffcc33);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  margin-bottom: 10px;
+}
+
+/* ================== CAROUSEL ================== */
+
+.carousel-container {
+  width: 100%;
+  max-width: 1400px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  cursor: pointer; /* обычная рука */
+  scrollbar-width: none;
+}
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel {
+  display: flex;
+  gap: 35px;
+  padding: 10px 10px 20px;
+}
+
+/* ================== BOOK CARD ================== */
+
+.book-card {
+  position: relative;
+  width: 260px;
+  aspect-ratio: 2 / 3;
+  perspective: 1200px;
+  flex: 0 0 auto;
+  transition: transform 0.35s ease;
+}
+
+/* ПОДЛОЖКА — СТРАНИЦЫ */
+.book-pages {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(
+    to right,
+    #d9d5cc 0%,
+    #f1eee9 25%,
+    #f1eee9 75%,
+    #d9d5cc 100%
+  );
+  box-shadow:
+    inset -3px 0 6px rgba(0,0,0,0.2),
+    0 8px 20px rgba(0,0,0,0.6);
+}
+
+/* ОБЛОЖКА */
+.book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease, filter 0.3s ease;
+  filter: brightness(0.85);
+}
+
+/* HOVER — ПРИОТКРЫТИЕ */
+.book-card:hover .book-cover {
+  transform: rotateY(-18deg);
+  filter: brightness(1);
+}
+
+/* ЭФФЕКТ "ДЫХАНИЯ" */
+@keyframes breathe {
+  0%, 100% { transform: translateZ(0) rotateY(0deg); }
+  50% { transform: translateZ(6px) rotateY(1deg); }
+}
+
+.book-card:hover {
+  animation: breathe 1.5s ease-in-out infinite;
+}
+
+/* ================== MOBILE ================== */
+
+@media (max-width: 768px) {
+
+  /* ===== HEADER ===== */
+  .header {
+    padding-top: 110px; /* место под навигацию */
+    justify-content: flex-start;
+  }
+
+  /* ===== TOP BAR ===== */
+  .top-bar {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* ===== LOGO ===== */
+  .logo {
+    font-size: 1.25rem;
+    white-space: nowrap;
+  }
+
+  /* ===== SOCIAL LINKS UNDER LOGO ===== */
+  .social-links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .social-links a {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  /* ===== TITLE ===== */
+  h1 {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  /* ===== CAROUSEL CENTERING ===== */
+  .carousel-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel {
+    gap: 20px;
+  }
+
+  .book-card {
+    width: 82vw;
+    scroll-snap-align: center;
+  }
+
+  /* hover-замена для тача */
+  .book-card:active .book-cover {
+    transform: rotateY(-18deg);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <video autoplay loop muted playsinline>
+    <source src="your-starry-sky-video.mp4" type="video/mp4">
+  </video>
+
+  <!-- ТОП-БАР -->
+  <div class="top-bar">
+<div class="logo">
+  <img src="images/logo.png" alt="KOMA TRANSLATE">
+</div>
+    <div class="social-links">
+      <a href="https://boosty.to/komataguri" target="_blank" rel="noopener">Boosty</a>
+      <a href="https://tl.rulate.ru/users/209811" target="_blank" rel="noopener">Rulate</a>
+      <a href="https://t.me/micro_koma" target="_blank" rel="noopener">Telegram</a>
+      <a href="https://imgur.com/a/shrouding-heavens-Spr1aNB" target="_blank" rel="noopener">Галерея</a>
+    </div>
+  </div>
+
+  <h1>Ваша библиотека</h1>
+
+  <div class="carousel-container" id="carousel-container">
+    <div class="carousel" id="carousel">
+      <!-- 15 КНИГ с правильными ссылками -->
+      <div class="book-card" data-book="Book1">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_1.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book2">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_2.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book3">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_3.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book4">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_4.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book5">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_5.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book6">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_6.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book7">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_7.jpg')"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="scripts/carousel.js"></script>
+</body>
+</html>

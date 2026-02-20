@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Читалка</title>
+
+<!-- Стильный шрифт -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0c0c0c;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ================== HERO ================== */
+
+.header {
+  position: relative;
+  min-height: 100vh;
+  padding: 25px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.header video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: -1;
+}
+
+/* Стильная надпись */
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 3rem;
+  text-align: center;
+  background: linear-gradient(90deg, #ffb347, #ffcc33);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  margin: 30px 0 20px;
+}
+
+/* ================== CAROUSEL ================== */
+
+.carousel-container {
+  width: 100%;
+  max-width: 1400px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  cursor: grab;
+  scrollbar-width: none;
+}
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel {
+  display: flex;
+  gap: 35px;
+  padding: 10px 10px 30px;
+}
+
+/* ================== BOOK CARD ================== */
+
+.book-card {
+  position: relative;
+  width: 260px;
+  aspect-ratio: 2 / 3;
+  perspective: 1200px;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+/* ПОДЛОЖКА — СТРАНИЦЫ */
+.book-pages {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(
+    to right,
+    #d9d5cc 0%,
+    #f1eee9 25%,
+    #f1eee9 75%,
+    #d9d5cc 100%
+  );
+  box-shadow:
+    inset -3px 0 6px rgba(0,0,0,0.2),
+    0 8px 20px rgba(0,0,0,0.6);
+}
+
+/* ОБЛОЖКА */
+.book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease, filter 0.3s ease;
+  filter: brightness(0.85);
+}
+
+/* HOVER — ПРИОТКРЫТИЕ */
+.book-card:hover .book-cover {
+  transform: rotateY(-18deg);
+  filter: brightness(1);
+}
+
+/* ================== LINKS ================== */
+
+.sidebar-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.sidebar-button {
+  padding: 8px 18px;
+  border: 1px solid white;
+  border-radius: 25px;
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+}
+
+.sidebar-button:hover {
+  background: white;
+  color: black;
+}
+
+/* ================== MOBILE ================== */
+
+@media (max-width: 768px) {
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+
+  .carousel-container {
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel {
+    gap: 20px;
+  }
+
+  .book-card {
+    width: 85vw;
+    scroll-snap-align: center;
+  }
+
+  .book-card:active .book-cover {
+    transform: rotateY(-18deg);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <video autoplay loop muted playsinline poster="preview.jpg">
+    <source src="your-starry-sky-video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <h1>Выберите книгу для чтения</h1>
+
+  <div class="carousel-container" id="carousel">
+    <div class="carousel" id="carousel-inner">
+      <!-- JS автоматически подставит книги -->
+    </div>
+  </div>
+
+  <div class="sidebar-buttons">
+    <a href="https://boosty.to/komataguri" target="_blank" rel="noopener" class="sidebar-button">Boosty</a>
+    <a href="https://tl.rulate.ru/users/209811" target="_blank" rel="noopener" class="sidebar-button">Rulate</a>
+    <a href="https://t.me/micro_koma" target="_blank" rel="noopener" class="sidebar-button">Telegram</a>
+    <a href="https://imgur.com/a/shrouding-heavens-Spr1aNB" target="_blank" rel="noopener" class="sidebar-button">Галерея</a>
+  </div>
+
+</div>
+
+<script>
+const carousel = document.getElementById('carousel-inner');
+const container = document.getElementById('carousel');
+const totalBooks = 15;
+
+// ===== Автодобавление книг =====
+for(let i = 1; i <= totalBooks; i++){
+  const card = document.createElement('div');
+  card.className = 'book-card';
+  card.dataset.book = i;
+
+  card.onclick = () => {
+    // Переход только если не был drag
+    if(!card.isDragging) window.location.href = `chapters/Book${i}/index.html`;
+  };
+
+  const pages = document.createElement('div');
+  pages.className = 'book-pages';
+
+  const cover = document.createElement('div');
+  cover.className = 'book-cover';
+  cover.style.backgroundImage = `url('images/book-cover_${i}.jpg')`;
+
+  card.appendChild(pages);
+  card.appendChild(cover);
+  carousel.appendChild(card);
+}
+
+// ===== Scroll Drag без случайного перехода =====
+let isDown = false;
+let startX = 0;
+let scrollLeft = 0;
+
+container.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX - container.offsetLeft;
+  scrollLeft = container.scrollLeft;
+  container.style.cursor = 'grabbing';
+  // Сбрасываем drag у всех книг
+  document.querySelectorAll('.book-card').forEach(c => c.isDragging = false);
+});
+
+container.addEventListener('mouseleave', () => {
+  isDown = false;
+  container.style.cursor = 'grab';
+});
+
+container.addEventListener('mouseup', () => {
+  isDown = false;
+  container.style.cursor = 'grab';
+});
+
+container.addEventListener('mousemove', e => {
+  if(!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - container.offsetLeft;
+  const walk = x - startX;
+  container.scrollLeft = scrollLeft - walk;
+  // Отмечаем все книги как drag
+  document.querySelectorAll('.book-card').forEach(c => c.isDragging = true);
+});
+
+// ===== колесо мыши горизонтально =====
+container.addEventListener('wheel', e => {
+  e.preventDefault();
+  container.scrollLeft += e.deltaY;
+}, { passive: false });
+
+</script>
+
+</body>
+</html>

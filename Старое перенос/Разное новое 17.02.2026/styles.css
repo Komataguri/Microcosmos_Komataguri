@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0c0c0c;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* ОГРАНИЧЕНИЕ ШИРИНЫ */
+
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), #0c0c0c);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* ============================= */
+/* КНИГИ */
+/* ============================= */
+
+.books-section {
+    padding: 60px 40px;
+}
+
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Контейнер скролла */
+
+.books-carousel {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    padding: 20px 0;
+
+    scroll-behavior: smooth;
+
+    cursor: grab;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.books-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Карточка книги */
+
+.book-card {
+    flex: 0 0 auto;
+    width: 220px;
+    text-decoration: none;
+    color: white;
+
+    transition: transform 0.35s ease;
+}
+
+.book-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 12px;
+
+    filter: brightness(0.75);
+    transition: 
+        transform 0.35s ease,
+        filter 0.35s ease;
+}
+
+/* Приближение и осветление */
+
+.book-card:hover img {
+    transform: scale(1.05);
+    filter: brightness(1);
+}
+
+/* Лёгкое "приоткрытие" только при наведении */
+
+.book-card:hover {
+    transform: perspective(900px) rotateY(-10deg);
+}
+
+/* ============================= */
+/* КНОПКИ */
+/* ============================= */
+
+.nav {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.nav:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* ============================= */
+/* ССЫЛКИ */
+/* ============================= */
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+.links a {
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 30px;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.links a:hover {
+    background: white;
+    color: black;
+}
+
+/* ============================= */
+/* МОБИЛЬНАЯ ВЕРСИЯ */
+/* ============================= */
+
+@media(max-width: 768px) {
+
+    .hero {
+        height: 300px;
+    }
+
+    .books-section {
+        padding: 40px 20px;
+    }
+
+    .book-card {
+        width: 160px;
+        transform: none !important;
+    }
+
+    .nav {
+        display: none;
+    }
+}

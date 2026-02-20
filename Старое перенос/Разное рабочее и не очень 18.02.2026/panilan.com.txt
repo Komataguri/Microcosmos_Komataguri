@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>«Секс — Дар Божий» — книга Пані Лань | Купити онлайн</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="«Секс — Дар Божий» — книга Пані Лань. Відвертий автофікшн/еротика про священника та стосунки. Купити книгу онлайн з доставкою по Україні.">
+    <meta name="keywords" content="секс дар божий, пані лань, еротика про священника, секс дар божий книга купити">
+    <meta name="author" content="Пані Лань">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://panilan.com">
+    
+    <!-- Google Search Console Verification (замініть на ваш код) -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+    
+    <!-- Additional SEO meta tags -->
+    <meta name="theme-color" content="#6b1010">
+    <meta name="msapplication-TileColor" content="#6b1010">
+    <meta name="application-name" content="Пані Лань">
+    <meta name="apple-mobile-web-app-title" content="Пані Лань">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://panilan.com">
+    <meta property="og:title" content="«Секс — Дар Божий» — книга Пані Лань">
+    <meta property="og:description" content="Відвертий автофікшн/еротика про священника. Купити книгу «Секс — Дар Божий» онлайн з доставкою по Україні.">
+    <meta property="og:image" content="https://panilan.com/assets/images/author.jpg">
+    <meta property="og:locale" content="uk_UA">
+    <meta property="og:site_name" content="Пані Лань">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://panilan.com">
+    <meta property="twitter:title" content="«Секс — Дар Божий» — книга Пані Лань">
+    <meta property="twitter:description" content="Еротика про священника та стосунки. Купити книгу «Секс — Дар Божий» онлайн з доставкою по Україні.">
+    <meta property="twitter:image" content="https://panilan.com/assets/images/author.jpg">
+    
+    <!-- Conditional cache control for Telegram -->
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css?3">
+    
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Book",
+        "name": "Секс - Дар Божий",
+        "author": {
+            "@type": "Person",
+            "name": "Пані Лань"
+        },
+        "description": "Відверта розповідь про життя, стосунки та внутрішній світ. Сумбурна писанина всупереч депресії і ненависті до себе.",
+        "inLanguage": "uk",
+        "genre": "Художня література",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Пані Лань"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "350",
+            "priceCurrency": "UAH",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "Пані Лань"
+            }
+        },
+        "url": "https://panilan.com",
+        "image": "https://panilan.com/assets/images/book-cover.jpg"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Пані Лань - Офіційний сайт",
+        "url": "https://panilan.com",
+        "description": "Офіційний сайт письменниці Пані Лань. Замовлення книги 'Секс - Дар Божий' з доставкою по Україні.",
+        "inLanguage": "uk",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://panilan.com/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Пані Лань",
+        "url": "https://panilan.com",
+        "logo": "https://panilan.com/assets/images/favicon-32x32.png",
+        "sameAs": [
+            "https://t.me/panilanyaofficial"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": "Ukrainian"
+        }
+    }
+    </script>
+    
+    <!-- Mobile responsive CSS for announcement -->
+    <style>
+        /* Базові стилі для всіх пристроїв */
+        body {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        .navbar {
+            min-height: 56px;
+            z-index: 1030;
+        }
+        
+        .delivery-announcement {
+            position: fixed !important;
+            top: 56px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1029;
+            margin: 0;
+            padding: 15px 0;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .hero-section {
+            padding-top: 110px !important;
+            min-height: 100vh;
+        }
+        
+        /* Мобільні стилі - використовуємо max-width */
+        @media (max-width: 991.98px) {
+            .delivery-announcement {
+                padding: 8px 10px;
+                line-height: 1.3;
+            }
+            
+            .hero-section {
+                padding-top: 100px !important;
+                min-height: calc(100vh - 100px);
+            }
+            
+            .hero-section .container {
+                padding-top: 20px;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .hero-section .lead {
+                font-size: 1rem !important;
+                margin-bottom: 2rem !important;
+            }
+        }
+        
+        /* Дуже маленькі екрани */
+        @media (max-width: 576px) {
+            .delivery-announcement {
+                padding: 6px 8px;
+            }
+            
+            .hero-section {
+                padding-top: 90px !important;
+            }
+            
+            .hero-section h1 {
+                font-size: 1.75rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="visually-hidden">Секс — Дар Божий — книга Пані Лань</h1>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#home" style="font-family: 'Francesca', serif; font-size: 2rem;">
+                ПАНІ ЛАНЬ 18+
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Про книгу</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#fragment2">Фрагмент</a>
+                    </li>
+                                        <li class="nav-item">
+                        <a class="nav-link" href="#package">Пакування</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#purchase">Купити</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Контакти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Delivery Announcement -->    
+    <!-- <div class="alert alert-warning alert-dismissible fade show m-0 text-center fixed-top delivery-announcement" role="alert" style="z-index: 1030; border-radius: 0; border: none; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: white; font-weight: 500; padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div class="container">
+             Сайт тимчасово не працює, за покупкою звертайтесь у інстаграм <a href="https://www.instagram.com/priestoholic/" target="_blank" style="color: white; text-decoration: underline;">priestoholic</a>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
+        </div>
+    </div> -->
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-black">
+        <!-- <div class="hero-overlay"></div> -->
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h1 class="display-3 fw-bold text-white mb-4">
+                        Книга ні про що, але про все, що в мене було, аби вам розповісти
+                    </h1>
+                    <p class="lead text-white-50 mb-5">
+                        Секс. Поклоніння <s>члену</s>. Зеро здорового глузду.
+                        <br>
+                        <br>
+                        Сумбурна писанина всупереч йобаній депресії і ненависті до себе. Наче запрошую вас до
+                        персональної божевільні. Мені соромно, дуже соромно, але я вчасно не зупинилася і тепер вибір за
+                        вами.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#purchase" class="btn btn-primary btn-lg me-3" style="background: #6b1010;">
+                            Купити зараз
+                        </a>
+                        <a href="#fragment2" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-book-open me-2"></i>Читати фрагмент
+                        </a>
+                    </div>
+                </div>
+      
+            </div>
+        </div>
+        </section>
+   <div class="section-divider  bg-black"></div>
+    <!-- About Book Section -->
+    <section id="about" class="py-2 bg-black text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h2 class="display-4 fw-bold mb-5">Про книгу</h2>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <img src="assets/images/author.jpg" alt="Автор" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h3 class="h2 fw-bold mb-4">В першозадумі анотація мусила звучати так:</h3>
+                    <p class="lead mb-4">
+                        "Якщо ви чекаєте вражаючої історії, карколомного сюжету і високої літератури, то вам не сюди — в жодному разі не читайте цей моветон: тут буде тільки секс у всіх своїх найпримітивніших проявах. Ну, і трішки жалості до себе з нальотом нульових. Мої спогади будуть доволі рваними, спершу скромними, як новонароджене полумʼя, що ледь жевріє, а далі я втрачу будь-який сором, готуйтеся".
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-heart me-3" style="color: #6b1010;"></i>трохи драми</li>
+                        <li class="mb-3"><i class="fas fa-cross me-3" style="color: #6b1010;"></i>філософських роздумів не буде</li>
+                        <li class="mb-3"><i class="fas fa-comment me-3" style="color: #6b1010;"></i>моральних дилем теж</li>
+                        <li class="mb-3"><i class="fas fa-fire me-3" style="color: #6b1010;"></i>фетишизація, обʼєктивація чоловіка, бо там їм і місце</li>
+                    </ul>
+                    <div class="book-stats mt-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h4 class="fw-bold">250+</h4>
+                                <small class="text-muted">Сторінок</small>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="fw-bold">28</h4>
+                                <small class="text-muted">Розділів</small>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="fw-bold">18+</h4>
+                                <small class="text-muted">Вікове обмеження</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fragment 2 Section -->
+    <section id="fragment2" class="py-2">
+        <div class="fragment2-bg-video" aria-hidden="true">
+            <video class="fragment2-bg-video__media" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                <source src="assets/video/IMG_0604.MP4" type="video/mp4">
+            </video>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="text-center mb-5" data-aos="fade-up">
+                        <h2 class="display-4 fw-bold mb-4 text-white">Фрагмент книги </h2>
+                    </div>
+
+                    <div class="row align-items-center">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6" data-aos="fade-up">
+                            <div class="fragment-preview p-4"
+                                style=" ">
+                                <!-- <blockquote class="blockquote"> -->
+                                    <!-- <p class="mb-4">Сьогодні я накинула на голову чорну мереживну вуаль і нафарбувала
+                                        вуста червоною помадою. Зайняла місце на лавці, поближче до вівтаря...</p> -->
+                                    <!-- <footer class="blockquote-footer">
+                                        <cite title="Source Title">Розділ 3: "Initium"</cite>
+                                    </footer> -->
+                                <!-- </blockquote> -->
+
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-lg" onclick="openBookModal()"
+                                        style="backdrop-filter: blur(10px); border: 1px solid #ffffffff; border-radius: inherit; color: #ffffffff; background: transparent;  padding: 0.75rem 2rem; font-weight: 600; transition: all 0.3s ease;"
+                                        onmouseover="this.style.background='#000000ff'; this.style.color='#fff';"
+                                        onmouseout="this.style.background='transparent'; this.style.color='#ffffffff';">
+                                        <i class="fas fa-book-bible me-2"></i>Читати
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider  bg-black"></div>
+
+        <!-- package Book Section -->
+    <section id="package" class="py-2 text-white">
+    
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h2 class="display-4 fw-bold mb-5">Пакування</h2>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                  <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-heart me-3" style="color: #6b1010;"></i>кожна книга у «фірмовій» коробці </li>
+                        <li class="mb-3"><i class="fas fa-fire me-3" style="color: #6b1010;"></i>У ПОДАРУНОК чорна церковна свічечка з натурального воску. Свічка з любовʼю намолена на здійснення вашого бажання.</li>
+                        <li class="mb-3"><i class="fas fa-thin fa-church me-3" style="color: #6b1010;"></i>кожна коробка АРОМАТИЗОВАНА церковною олійкою з Риму
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+
+                 <img src="assets/images/package.jpg" alt=Пакування" class="img-fluid rounded shadow">
+                   
+    
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Purchase Section -->
+    <section id="purchase" class="py-2 text-white bg-black">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h2 class="display-4 fw-bold mb-3">купити</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center g-4">
+                 <div class="col-lg-6">
+                    <div class="purchase-card" data-aos="zoom-in">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body p-5">
+                                <div class="text-center mb-4">
+                                    <h3 class="h2 fw-bold text-white">"Секс - Дар Божий" + ручка</h3>
+                                
+                                    <div class="price-tag">
+                                        <span class="price-new fs-1 fw-bold" style="color: #6b1010;">₴800</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="orderImage">
+                                    <img src="assets/images/order-book-pen.png" alt="Order" class="img-fluid">
+                                </div>
+                                <form class="orderForm mb-4">
+                                    <input type="hidden" name="productCode" value="book-pen">
+                                </form>
+
+                                <div class="d-grid">
+                                                                            <button type="button" class="btn btn-primary btn-lg" onclick="showAgeConfirmationModal(this)"
+                                            style="border: none; color: white;  border-radius: inherit; padding: 1rem 2rem; font-weight: 600; transition: all 0.3s ease;">
+                                            Оформити замовлення
+                                        </button>
+                                        <div class="mt-3">
+                                   
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Оплата при оформленні замовлення
+                                            </small>
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Відправка протягом 2-7 днів 
+                                            </small>
+                                        </div>
+                                                                    </div>
+
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Безпечна оплата через Monobank
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="purchase-card" data-aos="zoom-in">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body p-5">
+                                <div class="text-center mb-4">
+                                    <h3 class="h2 fw-bold text-white">"Секс - Дар Божий"</h3>
+                                
+                                    <div class="price-tag">
+                                        <span class="price-new fs-1 fw-bold" style="color: #6b1010;">₴660</span>
+                                    </div>
+
+                                </div>
+          <div class="orderImage">
+                                    <img src="assets/images/order-book.png" alt="Order" class="img-fluid">
+                                </div>
+                                <form class="orderForm mb-4">
+                                    <input type="hidden" name="productCode" value="book">
+                                </form>
+
+                                <div class="d-grid">
+                                                                            <button type="button" class="btn btn-primary btn-lg" onclick="showAgeConfirmationModal(this)"
+                                            style="border: none; color: white;  border-radius: inherit; padding: 1rem 2rem; font-weight: 600; transition: all 0.3s ease;">
+                                            Оформити замовлення
+                                        </button>
+                                        <div class="mt-3">
+                             
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Оплата при оформленні замовлення
+                                            </small>
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Відправка протягом 2-7 днів 
+                                            </small>
+                                        </div>
+                                                                    </div>
+
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Безпечна оплата через Monobank
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-lg-6">
+                    <div class="purchase-card" data-aos="zoom-in">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body p-5">
+                                <div class="text-center mb-4">
+                                    <h3 class="h2 fw-bold text-white">Ручка «Ad CONFESSIONEM»</h3>
+                                
+                                    <div class="price-tag">
+                                        <span class="price-new fs-1 fw-bold" style="color: #6b1010;">₴150</span>
+                                    </div>
+
+                                </div>
+          <div class="orderImage">
+                                    <img src="assets/images/pen.png" alt="Order" class="img-fluid">
+                                </div>
+                                <form class="orderForm mb-4">
+                                    <input type="hidden" name="productCode" value="pen">
+                                </form>
+
+                                <div class="d-grid">
+                                                                            <button type="button" class="btn btn-primary btn-lg" onclick="showAgeConfirmationModal(this)"
+                                            style="border: none; color: white;  border-radius: inherit; padding: 1rem 2rem; font-weight: 600; transition: all 0.3s ease;">
+                                            Оформити замовлення
+                                        </button>
+                                        <div class="mt-3">
+                               
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Оплата при оформленні замовлення
+                                                
+                                            </small>
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>Відправка протягом 2-7 днів 
+                                            </small>
+                                        </div>
+                                                                    </div>
+
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Безпечна оплата через Monobank
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-2 bg-black text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h2 class="display-4 fw-bold mb-5">Контакти</h2>
+                    <p class="lead mb-5">
+                        Oсобливо буду радіти вам в телеграм-каналі
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="social-links text-center" data-aos="zoom-in">
+                        <a href="https://t.me/priestoholic" class="social-link telegram" target="_blank">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span>Telegram</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@priestoholic" class="social-link tiktok" target="_blank">
+                            <i class="fab fa-tiktok"></i>
+                            <span>TikTok</span>
+                        </a>
+                        <a href="https://www.instagram.com/priestoholic" class="social-link instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black  py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; <span id="currentYear"></span> <b>Пані Лань</b>. Всі права захищені</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Config Variables -->
+        <script>
+        // Pass PHP config to JavaScript
+        window.SITE_URL = 'https://panilan.com';
+    </script>
+    
+    <script src="assets/js/vendor/page-flip.browser.js"></script>
+
+    <!-- Custom JS -->
+    <script src="assets/js/main.js?v=1771325549"></script>
+
+    <!-- Interactive Book Modal -->
+    <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content"
+                style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.9) 100%); border: none; border-radius: 20px;">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="bookModalLabel">
+                    
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="book-container">
+                        <div id="interactiveBook">
+                            <div class="book-page" data-density="soft">
+                                <div class="book-fragment-image">
+                                    <img src="assets/images/fragments/1.PNG" alt="Фрагмент 1">
+                                </div>
+                            </div>
+                            <div class="book-page" data-density="soft">
+                                <div class="book-fragment-image">
+                                    <img src="assets/images/fragments/2.PNG" alt="Фрагмент 2">
+                                </div>
+                            </div>
+                            <div class="book-page" data-density="soft">
+                                <div class="book-fragment-image">
+                                    <img src="assets/images/fragments/3.PNG" alt="Фрагмент 3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="text-center mt-4 pb-4">
+                        <button class="btn btn-outline-light me-3" onclick="previousPage()" id="prevBtn" disabled>
+                            <i class="fas fa-chevron-left me-2"></i>Попередня
+                        </button>
+
+                        <button class="btn btn-outline-light ms-3" onclick="nextPage()" id="nextBtn">
+                            Наступна<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                        <div class="text-center "><span class="text-white mx-3" id="pageIndicator">Сторінка 1 з 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- In-App Browser Warning Modal -->
+    <div class="modal fade" id="inAppBrowserModal" tabindex="-1" aria-labelledby="inAppBrowserModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(42, 42, 42, 0.95) 100%); border: none; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                <div class="modal-header border-0 text-center">
+                    <div class="w-100">
+                        <div class="mb-3">
+                        </div>
+                        <h5 class="modal-title text-white fw-bold" id="inAppBrowserModalLabel">
+                            Відкрийте сторінку в браузері
+                        </h5>
+                    </div>
+                </div>
+                <div class="modal-body text-center px-4 pb-4">
+                    <p class="text-white-50 mb-4" style="line-height: 1.6;">
+                        Ми виявили, що ви відкрили сайт через додаток <span id="detectedApp" class="text-warning fw-bold"></span>. 
+                        Щоб мати можливість здійснити оплату, відкрийте сторінку у звичайному браузері.
+                    </p>
+                    
+                    <div class="mb-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <small class="text-white-50 d-block mb-2">Скопіюйте це посилання:</small>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="siteUrlInput" readonly 
+                                   style="background: rgba(255, 255, 255, 0.95); border: none; font-size: 0.9rem; color: #333; font-weight: 500;">
+                            <button class="btn btn-outline-light" type="button" onclick="copySiteUrl()" 
+                                    style="border-color: rgba(255, 255, 255, 0.3);">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-warning btn-lg fw-bold" onclick="openInExternalBrowser()" 
+                                style="border-radius: 50px; padding: 0.8rem 2rem;">
+                            <i class="fas fa-external-link-alt me-2"></i>Відкрити в браузері
+                        </button>
+                        <button type="button" class="btn btn-outline-light" onclick="dismissWarning()" 
+                                style="border-radius: 50px; padding: 0.6rem 2rem;">
+                            Продовжити тут (не рекомендується)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Age Confirmation Modal -->
+    <div class="modal fade" id="ageConfirmationModal" tabindex="-1" aria-labelledby="ageConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.9) 100%); border: none; border-radius: 20px;">
+                <div class="modal-header border-0 text-center">
+                    <h5 class="modal-title text-white w-100" id="ageConfirmationModalLabel">
+                        Оформлення замовлення
+                    </h5>
+                </div>
+                <div class="modal-body text-white px-4 pb-4">
+                    <div id="orderModalAlert" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div class="mb-4">
+                                            <div class="mb-3">
+                            <label for="orderEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="orderEmail" autocomplete="email" required>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="orderFirstName" class="form-label">Імʼя</label>
+                                <input type="text" class="form-control" id="orderFirstName" autocomplete="given-name" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="orderLastName" class="form-label">Прізвище</label>
+                                <input type="text" class="form-control" id="orderLastName" autocomplete="family-name" required>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label for="orderPhone" class="form-label">Телефон</label>
+                            <input type="tel" class="form-control" id="orderPhone" autocomplete="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-white mb-3">Доставка</h6>
+
+                        <div class="d-flex gap-3 flex-wrap mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryType" id="deliveryTypeUa" value="ua" checked>
+                                <label class="form-check-label" for="deliveryTypeUa">Доставка по Україні</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deliveryType" id="deliveryTypeAbroad" value="abroad">
+                                <label class="form-check-label" for="deliveryTypeAbroad">Доставка закордон</label>
+                            </div>
+                        </div>
+
+                        <div id="deliveryBlockUa">
+                            <div class="mb-3">
+                                <label for="deliveryCity" class="form-label">Місто</label>
+                                <input type="text" class="form-control" id="deliveryCity" autocomplete="off" placeholder="Почніть вводити назву міста" list="deliveryCityList" required>
+                                <datalist id="deliveryCityList"></datalist>
+                                <div id="deliveryCitySuggestions" class="np-suggestions d-none"></div>
+                                <input type="hidden" id="deliveryCityDeliveryCity" value="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryBranch" class="form-label">Відділення</label>
+                                <input type="text" class="form-control" id="deliveryBranch" autocomplete="off" placeholder="Почніть вводити відділення" list="deliveryBranchList" required disabled>
+                                <datalist id="deliveryBranchList"></datalist>
+                                <div id="deliveryBranchSuggestions" class="np-suggestions d-none"></div>
+                                <input type="hidden" id="deliveryBranchRef" value="">
+                            </div>
+                        </div>
+
+                        <div id="deliveryBlockAbroad" class="d-none">
+                            <div class="mb-3">
+                                <label for="deliveryCountry" class="form-label">Країна</label>
+                                <input type="text" class="form-control" id="deliveryCountry">
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryAddressAbroad" class="form-label">Адреса доставки</label>
+                                <input type="text" class="form-control" id="deliveryAddressAbroad">
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryCommentAbroad" class="form-label">Коментар</label>
+                                <textarea class="form-control" id="deliveryCommentAbroad" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="confirmAgeCheckbox" required>
+                        <label class="form-check-label" for="confirmAgeCheckbox">Підтверджую, що мені виповнилося 18 років</label>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button type="button" class="btn btn-success btn-lg px-4" onclick="confirmAge()" style="border-radius: 50px; font-weight: 600;">
+                            <i class="fas fa-check me-2"></i>Перейти до оплати
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-lg px-4" data-bs-dismiss="modal" style="border-radius: 50px; font-weight: 600;">
+                            <i class="fas fa-times me-2"></i>Закрити
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Mobile viewport fix script -->
+    <script>
+        // Функція для динамічного розрахунку висоти елементів
+        function calculateMobileLayout() {
+            const navbar = document.querySelector('.navbar');
+            const announcement = document.querySelector('.delivery-announcement');
+            const heroSection = document.querySelector('.hero-section');
+            
+            if (window.innerWidth <= 991 && navbar && announcement && heroSection) {
+                // Отримуємо реальну висоту навігаційного меню
+                const navbarHeight = navbar.offsetHeight;
+                
+                // Встановлюємо позицію оголошення відносно реальної висоти меню
+                announcement.style.top = navbarHeight + 'px';
+                
+                // Отримуємо висоту оголошення
+                const announcementHeight = announcement.offsetHeight;
+                
+                // Встановлюємо відступ для hero секції
+                const totalOffset = navbarHeight + announcementHeight;
+                heroSection.style.paddingTop = (totalOffset + 20) + 'px';
+                
+                // Встановлюємо мінімальну висоту з урахуванням всіх елементів
+                heroSection.style.minHeight = `calc(100vh - ${totalOffset}px)`;
+            }
+        }
+        
+        // Виконуємо розрахунки після повного завантаження DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Невелика затримка для завершення рендерингу
+            setTimeout(calculateMobileLayout, 100);
+        });
+        
+        // Перерахунок при зміні розміру вікна
+        window.addEventListener('resize', function() {
+            setTimeout(calculateMobileLayout, 100);
+        });
+        
+        // Перерахунок при зміні орієнтації
+        window.addEventListener('orientationchange', function() {
+            setTimeout(calculateMobileLayout, 300);
+        });
+        
+        // Ініціалізація AOS анімацій
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 50
+            });
+        });
+    </script>
+
+</body>
+
+</html>
