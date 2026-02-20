@@ -8,6 +8,9 @@
 <!-- Стильный шрифт -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="styles/main.css">
+<link rel="stylesheet" href="styles/carousel.css">
+
 <style>
 * {
   margin: 0;
@@ -112,7 +115,7 @@ h1 {
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  cursor: pointer; /* обычная рука */
+  cursor: pointer;
   scrollbar-width: none;
 }
 .carousel-container::-webkit-scrollbar {
@@ -183,7 +186,6 @@ h1 {
 }
 
 /* ================== MOBILE ================== */
-
 @media (max-width: 768px) {
 
   /* ===== HEADER ===== */
@@ -269,7 +271,9 @@ h1 {
 
   <!-- ТОП-БАР -->
   <div class="top-bar">
-    <div class="logo">KOMA TRANSLATE</div>
+    <div class="logo">
+      KOMA TRANSLATE
+    </div>
     <div class="social-links">
       <a href="https://boosty.to/komataguri" target="_blank" rel="noopener">Boosty</a>
       <a href="https://tl.rulate.ru/users/209811" target="_blank" rel="noopener">Rulate</a>
@@ -282,7 +286,11 @@ h1 {
 
   <div class="carousel-container" id="carousel-container">
     <div class="carousel" id="carousel">
-      <!-- 15 КНИГ с правильными ссылками -->
+      <!-- Карточки книг -->
+      <div class="book-card" data-book="Book0">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_0.jpg')"></div>
+      </div>
       <div class="book-card" data-book="Book1">
         <div class="book-pages"></div>
         <div class="book-cover" style="background-image:url('images/book-cover_1.jpg')"></div>
@@ -310,6 +318,34 @@ h1 {
       <div class="book-card" data-book="Book7">
         <div class="book-pages"></div>
         <div class="book-cover" style="background-image:url('images/book-cover_7.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book8">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_8.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book9">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_9.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book10">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_10.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book11">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_11.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book12">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_12.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book13">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_13.jpg')"></div>
+      </div>
+      <div class="book-card" data-book="Book14">
+        <div class="book-pages"></div>
+        <div class="book-cover" style="background-image:url('images/book-cover_14.jpg')"></div>
       </div>
     </div>
   </div>

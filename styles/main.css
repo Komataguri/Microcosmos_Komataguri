@@ -35,17 +35,25 @@ body {
   letter-spacing: 2px;
 }
 
+/* === СОЦСЕТИ === */
+.social-links {
+  display: flex;
+  gap: 15px; /* расстояние между кнопками */
+}
+
 .social-links a {
-  color: white;
+  padding: 6px 14px; /* внутренние отступы */
+  border: 1px solid white;
+  border-radius: 25px;
   text-decoration: none;
-  margin-left: 20px;
-  font-size: 14px;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
+  color: white;
+  font-size: 0.9rem;
+  transition: 0.3s;
 }
 
 .social-links a:hover {
-  opacity: 1;
+  background: white;
+  color: black;
 }
 
 /* ============================= */

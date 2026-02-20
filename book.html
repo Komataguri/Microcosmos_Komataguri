@@ -7,11 +7,10 @@
 
   <!-- Стили книги -->
   <link rel="stylesheet" href="styles/book.css">
-  <!-- Стили тем -->
   <link rel="stylesheet" href="styles/theme.css">
-  <!-- marked.js для Markdown -->
+
+  <!-- Markdown и подсветка -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- highlight.js для подсветки кода -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
@@ -20,7 +19,6 @@
   <header>
     <div class="container">
       <img src="images/book-cover_1.jpg" alt="Обложка книги" class="book-cover">
-      <!-- book-info оставляем пустым, скрипт сам заполнит -->
       <div class="book-info"></div>
     </div>
   </header>
@@ -39,9 +37,9 @@
   <div class="nav-sticker" id="themeSticker">☯</div>
   <div class="nav-sticker" id="fontControls">
     <div class="font-controls-container">
-      <span class="font-btn" id="fontInc" title="Увеличить шрифт">A+</span>
-      <span class="font-btn" id="fontDec" title="Уменьшить шрифт">A-</span>
-      <span class="font-btn" id="fontReset" title="Сбросить">↺</span>
+      <span class="font-btn" id="fontInc">A+</span>
+      <span class="font-btn" id="fontDec">A-</span>
+      <span class="font-btn" id="fontReset">↺</span>
     </div>
   </div>
   <div class="nav-sticker" id="homeSticker">⌂</div>
