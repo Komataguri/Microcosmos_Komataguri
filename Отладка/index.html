@@ -23,6 +23,7 @@ body {
   overflow-x: hidden;
 }
 
+/* ================== HERO ================== */
 .header {
   position: relative;
   min-height: 100vh;
@@ -50,6 +51,7 @@ body {
   z-index: -1;
 }
 
+/* ================== TOP BAR ================== */
 .top-bar {
   position: absolute;
   top: 20px;
@@ -77,20 +79,20 @@ body {
 
 .social-links a {
   padding: 6px 14px;
-  border: 1px solid rgba(255, 179, 71, 0.5);
+  border: 1px solid white;
   border-radius: 25px;
   text-decoration: none;
   color: white;
-  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  transition: 0.3s;
   font-size: 0.9rem;
 }
 
 .social-links a:hover {
-  border-color: rgba(180, 60, 255, 0.9);
-  box-shadow: 0 0 10px rgba(180, 60, 255, 0.45), 0 0 20px rgba(180, 60, 255, 0.2);
-  background: rgba(180, 60, 255, 0.1);
+  background: white;
+  color: black;
 }
 
+/* ================== ЗАГОЛОВОК ================== */
 h1 {
   font-family: 'Montserrat', sans-serif;
   font-size: 2.6rem;
@@ -102,6 +104,7 @@ h1 {
   margin-bottom: 10px;
 }
 
+/* ================== CAROUSEL ================== */
 .carousel-container {
   width: 100%;
   max-width: 1400px;
@@ -120,6 +123,7 @@ h1 {
   padding: 10px 10px 20px;
 }
 
+/* ================== BOOK CARD ================== */
 .book-card {
   position: relative;
   width: 260px;
@@ -159,10 +163,12 @@ h1 {
 
 @keyframes breathe {
   0%, 100% { transform: translateZ(0) rotateY(0deg); }
-  50%       { transform: translateZ(6px) rotateY(1deg); }
+  50% { transform: translateZ(6px) rotateY(1deg); }
 }
 
-.book-card:hover { animation: breathe 1.5s ease-in-out infinite; }
+.book-card:hover {
+  animation: breathe 1.5s ease-in-out infinite;
+}
 
 /* ================== MOBILE ================== */
 @media (max-width: 768px) {
@@ -189,6 +195,7 @@ h1 {
   }
 
   .social-links {
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
@@ -203,8 +210,10 @@ h1 {
     margin-top: 24px;
     margin-bottom: 12px;
     font-size: 1.6rem;
+    text-align: center;
   }
 
+  /* ИСПРАВЛЕНИЕ: убран justify-content: center и align-items: center */
   .carousel-container {
     flex: 1;
     display: flex;
@@ -249,10 +258,11 @@ h1 {
 
   <h1>Ваша библиотека</h1>
 
-  <!-- Только два переключателя, только мобилка -->
+  <!-- Переключатель видов — виден только на мобилке -->
   <div class="view-switcher">
-    <button class="view-btn active" data-view="large" title="Крупный"></button>
-    <button class="view-btn" data-view="grid" title="Сетка"></button>
+    <button class="view-btn active" data-view="large" title="Крупный">🔲</button>
+    <button class="view-btn" data-view="medium" title="Средний">⊞</button>
+    <button class="view-btn" data-view="grid" title="Сетка">⊟</button>
   </div>
 
   <div class="carousel-container" id="carousel-container">
@@ -342,27 +352,17 @@ h1 {
 <script src="scripts/carousel.js"></script>
 
 <script>
+// Переключатель видов — только мобилка
 document.querySelectorAll('.view-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const view = btn.dataset.view;
     const container = document.getElementById('carousel-container');
-
-    // Убираем все режимы
-    container.classList.remove('view-grid');
-
-    // Включаем нужный
-    if (view === 'grid') container.classList.add('view-grid');
-
-    // Подсвечиваем активную кнопку
+    container.classList.remove('view-medium', 'view-grid');
+    if (view === 'medium') container.classList.add('view-medium');
+    if (view === 'grid')   container.classList.add('view-grid');
     document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
-    // Сброс скролла без прыжка
-    container.style.scrollSnapType = 'none';
     container.scrollLeft = 0;
-    setTimeout(() => {
-      container.style.scrollSnapType = '';
-    }, 100);
   });
 });
 </script>

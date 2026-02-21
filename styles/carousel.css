@@ -1,3 +1,6 @@
+/* ============================= */
+/* ПК — базовые стили */
+/* ============================= */
 .carousel-container {
   width: 100%;
   max-width: 1400px;
@@ -18,13 +21,39 @@
   padding: 10px 0 20px;
 }
 
+/* ============================= */
+/* BOOK CARD */
+/* ============================= */
 .book-card {
   position: relative;
   width: 260px;
   aspect-ratio: 2 / 3;
   perspective: 1200px;
   flex: 0 0 auto;
+  cursor: pointer;
+
+  /* Fade-in при загрузке через opacity+transform напрямую */
+  opacity: 0;
+  transform: translateY(18px);
   transition: transform 0.35s ease;
+}
+
+/* Поочерёдное появление через animation только на wrapper */
+.book-card.appeared {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Временные анимации появления — назначаются инлайн через JS */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .book-pages {
@@ -33,6 +62,7 @@
   border-radius: 14px;
   background: linear-gradient(to right, #d9d5cc 0%, #f1eee9 25%, #f1eee9 75%, #d9d5cc 100%);
   box-shadow: inset -3px 0 6px rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.6);
+  transition: box-shadow 0.35s ease;
 }
 
 .book-card .book-cover {
@@ -47,52 +77,189 @@
   filter: brightness(0.85);
 }
 
+/* Hover на обложку */
 .book-card:hover .book-cover {
   transform: rotateY(-18deg);
   filter: brightness(1);
 }
 
-@keyframes breathe {
-  0%,100% { transform: translateZ(0); }
-  50% { transform: translateZ(6px); }
+/* Hover: лёгкое дыхание через transform на самой карточке */
+.book-card:hover {
+  transform: translateY(-4px) scale(1.02);
 }
 
-.book-card:hover { animation: breathe 1.5s ease-in-out infinite; }
+/* Glow при наведении */
+.book-card:hover .book-pages {
+  box-shadow:
+    inset -3px 0 6px rgba(0,0,0,0.2),
+    0 8px 20px rgba(0,0,0,0.6),
+    0 0 18px 3px rgba(255, 185, 60, 0.35),
+    0 0 40px 6px rgba(255, 140, 0, 0.15);
+}
 
 /* ============================= */
-/* MOBILE */
+/* HOVER-ПЛАШКА С НАЗВАНИЕМ */
+/* ============================= */
+.book-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 12px 14px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.4px;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.book-card:hover .book-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: none) {
+  .book-label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================= */
+/* ПЕРЕКЛЮЧАТЕЛЬ ВИДОВ — только мобилка */
+/* ============================= */
+.view-switcher {
+  display: none;
+}
+
+/* ============================= */
+/* МОБИЛЬНАЯ ВЕРСИЯ */
 /* ============================= */
 @media (max-width: 768px) {
+
+  .view-switcher {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 8px 0;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  .view-btn {
+    width: 38px;
+    height: 38px;
+    background-color: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255, 179, 71, 0.45);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+  }
+
+  .view-btn[data-view="large"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.75)' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3C/svg%3E");
+  }
+
+  .view-btn[data-view="grid"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.75)' stroke-width='2'%3E%3Crect x='3' y='3' width='7' height='7' rx='1'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1'/%3E%3C/svg%3E");
+  }
+
+  .view-btn.active {
+    background-color: rgba(255, 179, 71, 0.2);
+    border-color: #ffb347;
+    box-shadow: 0 0 10px rgba(255, 179, 71, 0.35);
+  }
+
+  .view-btn[data-view="large"].active {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffcc33' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3C/svg%3E");
+  }
+
+  .view-btn[data-view="grid"].active {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffcc33' stroke-width='2'%3E%3Crect x='3' y='3' width='7' height='7' rx='1'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1'/%3E%3C/svg%3E");
+  }
+
+  /* --- ВИД 1: крупный --- */
   .carousel-container {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    /* scroll-snap включается только после positionFirstCard через JS */
     scroll-snap-type: x mandatory;
     touch-action: pan-x;
     cursor: default;
     padding: 0;
-    /* ВАЖНО: убираем justify-content и align-items — они сдвигали карточки */
+    width: 100%;
   }
 
   .carousel-container::-webkit-scrollbar { display: none; }
 
   .carousel {
     display: flex;
-    gap: 16px;
-    /* padding по бокам чтобы первая и последняя карточки не прилипали к краю */
-    padding: 10px 20px 20px;
+    gap: 12px;
+    padding: 8px 16px 16px;
+    width: max-content;
   }
 
   .book-card {
-    flex: 0 0 80vw;
+    flex: 0 0 82vw;
     max-width: 300px;
+    width: auto;
     scroll-snap-align: start;
     margin: 0;
   }
 
+  /* --- ВИД 2: сетка --- */
+  .carousel-container.view-grid {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: none;
+    touch-action: pan-y;
+    max-height: calc(100vh - 220px);
+    align-items: flex-start;
+  }
+
+  .carousel-container.view-grid .carousel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 8px 10px 16px;
+    width: 100%;
+  }
+
+  .carousel-container.view-grid .book-card {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    scroll-snap-align: none;
+    aspect-ratio: 2 / 3;
+  }
+
   .book-card:active .book-cover {
     transform: rotateY(-18deg);
+  }
+
+  .book-card:active .book-pages {
+    box-shadow:
+      inset -3px 0 6px rgba(0,0,0,0.2),
+      0 8px 20px rgba(0,0,0,0.6),
+      0 0 14px 2px rgba(255, 185, 60, 0.3);
   }
 }

@@ -5,20 +5,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const carousel  = document.getElementById('carousel');
   if (!container || !carousel) return;
 
+  // =========================
+  // 1. ОРИГИНАЛЬНЫЕ КАРТОЧКИ
+  // =========================
   const originalCards = Array.from(carousel.querySelectorAll('.book-card'));
   const originalCount = originalCards.length;
   if (!originalCount) return;
 
+  // =========================
+  // 2. КЛОНЫ ДЛЯ БЕСКОНЕЧНОГО СКРОЛЛА (только ПК)
+  // =========================
   let cards, clonesCount = 0;
 
-  if (window.innerWidth > 768) {
+  if (window.innerWidth > 768) { // ПК
     const clonesBefore = originalCards.slice().reverse().map(c => c.cloneNode(true));
     clonesBefore.forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
+
     const clonesAfter = originalCards.map(c => c.cloneNode(true));
     clonesAfter.forEach(clone => carousel.appendChild(clone));
+
     cards = Array.from(carousel.querySelectorAll('.book-card'));
     clonesCount = clonesBefore.length;
-  } else {
+  } else { // Мобильные — без клонов
     cards = originalCards;
   }
 
@@ -26,29 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardWidth = cards[0].offsetWidth + GAP;
 
   // =========================
-  // ПОЗИЦИОНИРОВАНИЕ
+  // 3. УСТАНОВКА ПЕРВОЙ КАРТОЧКИ
   // =========================
   function positionFirstCard() {
-    if (window.innerWidth > 768) {
-      const first = cards[clonesCount];
+    if (window.innerWidth > 768) { // ПК
+      const first = cards[clonesCount]; // первая оригинальная карточка
       container.scrollLeft = first.offsetLeft;
-    } else {
-      container.style.scrollSnapType = 'none';
-      container.style.scrollBehavior = 'auto';
-      container.scrollLeft = 0;
+    } else { // Мобильные
+      // временно отключаем центрирование через CSS
+      cards.forEach(card => card.style.margin = '0');
+      container.scrollLeft = 0; // ставим первую карточку в начало
+
+      // через небольшой timeout возвращаем margin обратно
       setTimeout(() => {
-        container.style.scrollSnapType = '';
-        container.style.scrollBehavior = '';
-      }, 150);
+        cards.forEach(card => card.style.margin = '');
+      }, 50);
     }
   }
 
-  // Запускаем после полной отрисовки страницы
-  window.addEventListener('load', positionFirstCard);
-  setTimeout(positionFirstCard, 200);
+  positionFirstCard();
+  window.addEventListener('resize', positionFirstCard);
 
   // =========================
-  // БЕСКОНЕЧНЫЙ СКРОЛЛ (ПК)
+  // 4. БЕСКОНЕЧНЫЙ СКРОЛЛ (только ПК)
   // =========================
   if (window.innerWidth > 768) {
     container.addEventListener('scroll', () => {
@@ -62,22 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================
-  // КЛИК ПО КАРТОЧКЕ
+  // 5. КЛИК ПО КАРТОЧКЕ
   // =========================
-  // Один глобальный флаг вместо флага на каждой карточке —
-  // это главное исправление, старый способ ломал клик навсегда
-  let dragHappened = false;
-
   cards.forEach(card => {
+    card.isDragging = false;
     card.addEventListener('click', () => {
-      if (dragHappened) return;
-      const book = card.dataset.book;
-      if (book) window.location.href = `book.html?book=${book}`;
+      if (!card.isDragging) {
+        const book = card.dataset.book;
+        if (book) window.location.href = `book.html?book=${book}`;
+      }
     });
   });
 
   // =========================
-  // ПК: drag + инерция
+  // 6. ПК: drag + инерция мышью
   // =========================
   if (window.innerWidth > 768) {
     let isDragging = false;
@@ -88,30 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.addEventListener('mousedown', e => {
       isDragging = true;
-      dragHappened = false; // сброс в начале каждого нажатия
       dragStartX = e.pageX - container.offsetLeft;
       scrollStart = container.scrollLeft;
+      cards.forEach(c => c.isDragging = false);
     });
 
-    container.addEventListener('mouseleave', () => {
-      isDragging = false;
-    });
-
-    container.addEventListener('mouseup', () => {
-      isDragging = false;
-      // Небольшая задержка чтобы клик успел сработать раньше сброса
-      setTimeout(() => { dragHappened = false; }, 50);
-    });
+    container.addEventListener('mouseleave', () => isDragging = false);
+    container.addEventListener('mouseup', () => isDragging = false);
 
     container.addEventListener('mousemove', e => {
       if (!isDragging) return;
       e.preventDefault();
       const x = e.pageX - container.offsetLeft;
       const walk = x - dragStartX;
-      // Считаем драгом только если сдвиг больше 5px
-      if (Math.abs(walk) > 5) dragHappened = true;
       container.scrollLeft = scrollStart - walk;
-      scrollVelocity = -walk;
+      cards.forEach(c => c.isDragging = true);
+      scrollVelocity = -walk; // для инерции колесиком
     });
 
     container.addEventListener('wheel', e => {
@@ -123,9 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function smoothScroll() {
       container.scrollLeft += scrollVelocity;
       scrollVelocity *= 0.85;
+
       const maxScroll = (originalCount + clonesCount) * cardWidth;
       if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
       if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
+
       if (Math.abs(scrollVelocity) > 0.5) {
         rafId = requestAnimationFrame(smoothScroll);
       } else {
@@ -134,21 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-  // Анимация появления карточек при загрузке
-  // Делаем через JS чтобы не конфликтовало с hover-эффектами
-  const allOriginalCards = carousel.querySelectorAll('.book-card');
-  allOriginalCards.forEach((card, i) => {
-    setTimeout(() => {
-      card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-      card.style.opacity = '1';
-      card.style.transform = 'translateY(0)';
-      // После появления убираем инлайн-стили чтобы hover работал нормально
-      setTimeout(() => {
-        card.style.transition = '';
-        card.style.opacity = '';
-        card.style.transform = '';
-        card.classList.add('appeared');
-      }, 450);
-    }, 50 + i * 60);
-  });
+
+  // =========================
+  // 7. MOBILE: нативный свайп + scroll-snap
+  // =========================
+  // все через CSS, JS вмешиваться не нужно
 });
