@@ -1,16 +1,13 @@
-/* ============================= */
-/* CAROUSEL / HERO */
-/* ============================= */
 .carousel-container {
   width: 100%;
   max-width: 1400px;
-  overflow-x: auto;       /* ПК: нативный скролл */
+  overflow-x: auto;
   overflow-y: hidden;
   display: flex;
   cursor: grab;
   scrollbar-width: none;
   padding: 0 10px;
-  touch-action: pan-x;    /* горизонтальные свайпы на мобильных блокируются JS */
+  touch-action: pan-x;
 }
 
 .carousel-container::-webkit-scrollbar { display: none; }
@@ -21,9 +18,6 @@
   padding: 10px 0 20px;
 }
 
-/* ============================= */
-/* BOOK CARD */
-/* ============================= */
 .book-card {
   position: relative;
   width: 260px;
@@ -67,16 +61,35 @@
 
 /* ============================= */
 /* MOBILE */
+/* ============================= */
 @media (max-width: 768px) {
   .carousel-container {
-    overflow-x: auto;      /* включаем нативный скролл для инерции */
-    -webkit-overflow-scrolling: touch; /* плавная инерция на iOS */
-    touch-action: pan-x pan-y;  /* свайпы работают в обе стороны */
-    cursor: grab;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* scroll-snap включается только после positionFirstCard через JS */
+    scroll-snap-type: x mandatory;
+    touch-action: pan-x;
+    cursor: default;
+    padding: 0;
+    /* ВАЖНО: убираем justify-content и align-items — они сдвигали карточки */
+  }
+
+  .carousel-container::-webkit-scrollbar { display: none; }
+
+  .carousel {
+    display: flex;
+    gap: 16px;
+    /* padding по бокам чтобы первая и последняя карточки не прилипали к краю */
+    padding: 10px 20px 20px;
   }
 
   .book-card {
-    width: 85vw;
+    flex: 0 0 80vw;
+    max-width: 300px;
+    scroll-snap-align: start;
+    margin: 0;
   }
 
   .book-card:active .book-cover {

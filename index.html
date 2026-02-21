@@ -190,7 +190,7 @@ h1 {
 
   /* ===== HEADER ===== */
   .header {
-    padding-top: 110px; /* место под навигацию */
+    padding-top: 110px;
     justify-content: flex-start;
   }
 
@@ -200,7 +200,6 @@ h1 {
     top: 16px;
     left: 16px;
     right: 16px;
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -213,7 +212,7 @@ h1 {
     white-space: nowrap;
   }
 
-  /* ===== SOCIAL LINKS UNDER LOGO ===== */
+  /* ===== SOCIAL LINKS ===== */
   .social-links {
     display: flex;
     flex-direction: row;
@@ -234,30 +233,31 @@ h1 {
     text-align: center;
   }
 
-  /* ===== CAROUSEL CENTERING ===== */
+  /* ===== КАРУСЕЛЬ ===== */
   .carousel-container {
     flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
+    /* justify-content: center убран — он сдвигал карусель к середине */
   }
 
   .carousel {
-    gap: 20px;
+    gap: 16px;
+    padding: 10px 20px 20px;
   }
 
   .book-card {
     width: 82vw;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
   }
 
-  /* hover-замена для тача */
+  /* тап вместо hover */
   .book-card:active .book-cover {
     transform: rotateY(-18deg);
   }
 }
-
 </style>
 </head>
 
@@ -286,7 +286,6 @@ h1 {
 
   <div class="carousel-container" id="carousel-container">
     <div class="carousel" id="carousel">
-      <!-- Карточки книг -->
       <div class="book-card" data-book="Book0">
         <div class="book-pages"></div>
         <div class="book-cover" style="background-image:url('images/book-cover_0.jpg')"></div>

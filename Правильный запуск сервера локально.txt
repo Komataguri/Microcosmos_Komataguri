@@ -59,7 +59,7 @@ Microcosmos_Komataguri/      ← корневая папка проекта (D:\
         ├─ images/                    ← иллюстрации к главам Book3
         │   ├─ img_0001.jpg
         │   └─ ...
-        │   ├─ chapters.json
+        ├─ chapters.json
         ├─ Глава 00.md
         ├─ Глава 01.md
         └─ ...

@@ -5,59 +5,73 @@ document.addEventListener('DOMContentLoaded', () => {
   const carousel  = document.getElementById('carousel');
   if (!container || !carousel) return;
 
-  // -----------------------------
-  // 1. оригинальные карточки
-  // -----------------------------
+  // =========================
+  // 1. ОРИГИНАЛЬНЫЕ КАРТОЧКИ
+  // =========================
   const originalCards = Array.from(carousel.querySelectorAll('.book-card'));
   const originalCount = originalCards.length;
   if (!originalCount) return;
 
-  // -----------------------------
-  // 2. клоны для бесконечного скролла (ПК)
-  // -----------------------------
-  const clonesBefore = originalCards.slice().reverse().map(c => c.cloneNode(true));
-  clonesBefore.forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
-  const clonesAfter = originalCards.map(c => c.cloneNode(true));
-  clonesAfter.forEach(clone => carousel.appendChild(clone));
+  // =========================
+  // 2. КЛОНЫ ДЛЯ БЕСКОНЕЧНОГО СКРОЛЛА (только ПК)
+  // =========================
+  let cards, clonesCount = 0;
 
-  const cards = Array.from(carousel.querySelectorAll('.book-card'));
-  const clonesCount = clonesBefore.length;
+  if (window.innerWidth > 768) { // ПК
+    const clonesBefore = originalCards.slice().reverse().map(c => c.cloneNode(true));
+    clonesBefore.forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
+
+    const clonesAfter = originalCards.map(c => c.cloneNode(true));
+    clonesAfter.forEach(clone => carousel.appendChild(clone));
+
+    cards = Array.from(carousel.querySelectorAll('.book-card'));
+    clonesCount = clonesBefore.length;
+  } else { // Мобильные — без клонов
+    cards = originalCards;
+  }
 
   const GAP = 20;
   const cardWidth = cards[0].offsetWidth + GAP;
 
-  // -----------------------------
-  // 3. начальная позиция
-  // -----------------------------
-  const firstOriginalIndex = clonesCount;
+  // =========================
+  // 3. УСТАНОВКА ПЕРВОЙ КАРТОЧКИ
+  // =========================
   function positionFirstCard() {
-    const first = cards[firstOriginalIndex];
-    if (!first) return;
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 768) { // ПК
+      const first = cards[clonesCount]; // первая оригинальная карточка
       container.scrollLeft = first.offsetLeft;
-    } else {
-      const center = container.offsetWidth / 2;
-      const cardCenter = first.offsetLeft + first.offsetWidth / 2;
-      container.scrollLeft = cardCenter - center;
+    } else { // Мобильные
+      // временно отключаем центрирование через CSS
+      cards.forEach(card => card.style.margin = '0');
+      container.scrollLeft = 0; // ставим первую карточку в начало
+
+      // через небольшой timeout возвращаем margin обратно
+      setTimeout(() => {
+        cards.forEach(card => card.style.margin = '');
+      }, 50);
     }
   }
+
   positionFirstCard();
   window.addEventListener('resize', positionFirstCard);
 
-  // -----------------------------
-  // 4. бесконечный скролл (только ПК)
-  // -----------------------------
-  function normalizeScroll() {
-    if (window.innerWidth <= 768) return; // мобильный — используем нативный скролл
-   const maxScroll = (originalCount + clonesCount) * cardWidth;
-   if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
-   if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
+  // =========================
+  // 4. БЕСКОНЕЧНЫЙ СКРОЛЛ (только ПК)
+  // =========================
+  if (window.innerWidth > 768) {
+    container.addEventListener('scroll', () => {
+      const maxScroll = (originalCount + clonesCount) * cardWidth;
+      if (container.scrollLeft <= 0) {
+        container.scrollLeft += originalCount * cardWidth;
+      } else if (container.scrollLeft >= maxScroll) {
+        container.scrollLeft -= originalCount * cardWidth;
+      }
+    });
   }
-  container.addEventListener('scroll', normalizeScroll);
 
-  // -----------------------------
-  // 5. клик по карточке (не срабатывает при drag)
-  // -----------------------------
+  // =========================
+  // 5. КЛИК ПО КАРТОЧКЕ
+  // =========================
   cards.forEach(card => {
     card.isDragging = false;
     card.addEventListener('click', () => {
@@ -68,61 +82,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // -----------------------------
-  // 6. drag / touch + инерция
-  // -----------------------------
-  let isDragging = false;
-  let lastX = 0;
-  let velocity = 0;
-  let rafId = null;
+  // =========================
+  // 6. ПК: drag + инерция мышью
+  // =========================
+  if (window.innerWidth > 768) {
+    let isDragging = false;
+    let dragStartX = 0;
+    let scrollStart = 0;
+    let scrollVelocity = 0;
+    let rafId = null;
 
-  function startDrag(x) {
-    isDragging = true;
-    lastX = x;
-    velocity = 0;
-    cancelAnimationFrame(rafId);
-    rafId = null;
-    cards.forEach(c => (c.isDragging = false));
-  }
+    container.addEventListener('mousedown', e => {
+      isDragging = true;
+      dragStartX = e.pageX - container.offsetLeft;
+      scrollStart = container.scrollLeft;
+      cards.forEach(c => c.isDragging = false);
+    });
 
-  function moveDrag(dx) {
-   if (!isDragging) return;
-   velocity = dx;
-   container.scrollLeft -= dx;
-    normalizeScroll(); // теперь работает для всех устройств
-   cards.forEach(c => (c.isDragging = true));
-  }
+    container.addEventListener('mouseleave', () => isDragging = false);
+    container.addEventListener('mouseup', () => isDragging = false);
 
-  function stopDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    cards.forEach(c => (c.isDragging = false));
-    startInertia();
-  }
+    container.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = x - dragStartX;
+      container.scrollLeft = scrollStart - walk;
+      cards.forEach(c => c.isDragging = true);
+      scrollVelocity = -walk; // для инерции колесиком
+    });
 
-  function startInertia() {
-    const friction = 0.92;
-    function step() {
-      velocity *= friction;
-      if (Math.abs(velocity) < 0.4) { velocity = 0; rafId = null; return; }
-      container.scrollLeft -= velocity;
-      if (window.innerWidth > 768) normalizeScroll();
-      rafId = requestAnimationFrame(step);
+    container.addEventListener('wheel', e => {
+      e.preventDefault();
+      scrollVelocity += e.deltaY * 0.5;
+      if (!rafId) rafId = requestAnimationFrame(smoothScroll);
+    }, { passive: false });
+
+    function smoothScroll() {
+      container.scrollLeft += scrollVelocity;
+      scrollVelocity *= 0.85;
+
+      const maxScroll = (originalCount + clonesCount) * cardWidth;
+      if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
+      if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
+
+      if (Math.abs(scrollVelocity) > 0.5) {
+        rafId = requestAnimationFrame(smoothScroll);
+      } else {
+        rafId = null;
+        scrollVelocity = 0;
+      }
     }
-    rafId = requestAnimationFrame(step);
   }
 
-  // ==== MOUSE ====
-  container.addEventListener('mousedown', e => startDrag(e.pageX));
-  container.addEventListener('mousemove', e => moveDrag(e.pageX));
-  window.addEventListener('mouseup', stopDrag);
-  container.addEventListener('mouseleave', stopDrag);
-
-  // ==== WHEEL ====
-  container.addEventListener('wheel', e => {
-    e.preventDefault();
-    velocity += e.deltaY * 0.5;
-    if (!rafId) startInertia();
-  }, { passive: false });
-
+  // =========================
+  // 7. MOBILE: нативный свайп + scroll-snap
+  // =========================
+  // все через CSS, JS вмешиваться не нужно
 });
