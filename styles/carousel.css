@@ -4,12 +4,13 @@
 .carousel-container {
   width: 100%;
   max-width: 1400px;
-  overflow-x: auto;    /* важно для ПК скролла */
+  overflow-x: auto;       /* ПК: нативный скролл */
   overflow-y: hidden;
   display: flex;
   cursor: grab;
   scrollbar-width: none;
   padding: 0 10px;
+  touch-action: pan-x;    /* горизонтальные свайпы на мобильных блокируются JS */
 }
 
 .carousel-container::-webkit-scrollbar { display: none; }
@@ -22,6 +23,7 @@
 
 /* ============================= */
 /* BOOK CARD */
+/* ============================= */
 .book-card {
   position: relative;
   width: 260px;
@@ -66,6 +68,18 @@
 /* ============================= */
 /* MOBILE */
 @media (max-width: 768px) {
-  .book-card { width: 85vw; }
-  .book-card:active .book-cover { transform: rotateY(-18deg); }
+  .carousel-container {
+    overflow-x: auto;      /* включаем нативный скролл для инерции */
+    -webkit-overflow-scrolling: touch; /* плавная инерция на iOS */
+    touch-action: pan-x pan-y;  /* свайпы работают в обе стороны */
+    cursor: grab;
+  }
+
+  .book-card {
+    width: 85vw;
+  }
+
+  .book-card:active .book-cover {
+    transform: rotateY(-18deg);
+  }
 }
