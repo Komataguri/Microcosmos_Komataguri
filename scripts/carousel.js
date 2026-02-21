@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. бесконечный скролл (только ПК)
   // -----------------------------
   function normalizeScroll() {
-    const maxScroll = (originalCount + clonesCount) * cardWidth;
-   // бесконечный скролл для всех устройств
+    if (window.innerWidth <= 768) return; // мобильный — используем нативный скролл
+   const maxScroll = (originalCount + clonesCount) * cardWidth;
    if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
    if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
   }
@@ -117,30 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
   container.addEventListener('mousemove', e => moveDrag(e.pageX));
   window.addEventListener('mouseup', stopDrag);
   container.addEventListener('mouseleave', stopDrag);
-
-// ==== TOUCH (мобильная версия) ====
-let touchStartX = 0;
-let touchPrevX = 0;
-
-container.addEventListener('touchstart', e => {
-  if (e.touches.length === 1) {
-    touchStartX = e.touches[0].pageX;
-    touchPrevX = touchStartX;
-    startDrag(touchStartX);
-  }
-}, { passive: true });
-
-container.addEventListener('touchmove', e => {
-  if (e.touches.length === 1) {
-    const touchX = e.touches[0].pageX;
-    const dx = touchX - touchPrevX;
-    touchPrevX = touchX;
-    moveDrag(dx); // передаем dx напрямую
-  }
-}, { passive: true });
-
-container.addEventListener('touchend', stopDrag);
-container.addEventListener('touchcancel', stopDrag);
 
   // ==== WHEEL ====
   container.addEventListener('wheel', e => {
