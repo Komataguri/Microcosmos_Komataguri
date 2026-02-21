@@ -1,15 +1,10 @@
-// scripts/carousel.js
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const container = document.getElementById('carousel-container');
   const carousel  = document.getElementById('carousel');
-
-  if (!container || !carousel) {
-    console.warn('Carousel: контейнер не найден');
-    return;
-  }
+  if (!container || !carousel) return;
 
   // =========================
   // 0. ОРИГИНАЛЬНЫЕ КАРТОЧКИ
@@ -19,17 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!originalCount) return;
 
   // =========================
-  // 1. КЛОНИРОВАНИЕ
+  // 1. КЛОНИРОВАНИЕ ДЛЯ БЕСКОНЕЧНОГО СКРОЛЛА
   // =========================
-  const clonesBefore = originalCards
-    .slice()
-    .reverse()
-    .map(c => c.cloneNode(true));
-
-  clonesBefore.forEach(clone =>
-    carousel.insertBefore(clone, carousel.firstChild)
-  );
-
+  const clonesBefore = originalCards.slice().reverse().map(c => c.cloneNode(true));
+  clonesBefore.forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
   const clonesAfter = originalCards.map(c => c.cloneNode(true));
   clonesAfter.forEach(clone => carousel.appendChild(clone));
 
@@ -37,16 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const clonesCount = clonesBefore.length;
 
   // =========================
-  // 2. РАЗМЕРЫ
+  // 2. ШИРИНА КАРТОЧКИ + GAP
   // =========================
   const GAP = 20;
   const cardWidth = cards[0].offsetWidth + GAP;
 
   // =========================
-  // 3. НАЧАЛЬНАЯ ПОЗИЦИЯ
+  // 3. ПЕРВОНАЧАЛЬНАЯ ПОЗИЦИЯ
   // =========================
   const firstOriginalIndex = clonesCount;
-
   function positionFirstCard() {
     const first = cards[firstOriginalIndex];
     if (!first) return;
@@ -59,25 +46,17 @@ document.addEventListener('DOMContentLoaded', () => {
       container.scrollLeft = cardCenter - center;
     }
   }
-
   positionFirstCard();
   window.addEventListener('resize', positionFirstCard);
 
   // =========================
-  // 4. БЕСКОНЕЧНЫЙ СКРОЛЛ
+  // 4. БЕСКОНЕЧНЫЙ СКРОЛЛ (ПК + инерция)
   // =========================
   function normalizeScroll() {
     const maxScroll = (originalCount + clonesCount) * cardWidth;
-
-    if (container.scrollLeft <= 0) {
-      container.scrollLeft += originalCount * cardWidth;
-    }
-
-    if (container.scrollLeft >= maxScroll) {
-      container.scrollLeft -= originalCount * cardWidth;
-    }
+    if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
+    if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
   }
-
   container.addEventListener('scroll', normalizeScroll);
 
   // =========================
@@ -85,19 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   cards.forEach(card => {
     card.isDragging = false;
-
     card.addEventListener('click', () => {
-      if (card.isDragging) return;
-
-      const book = card.dataset.book;
-      if (book) {
-        window.location.href = `book.html?book=${book}`;
+      if (!card.isDragging) {
+        const book = card.dataset.book;
+        if (book) window.location.href = `book.html?book=${book}`;
       }
     });
   });
 
   // =========================
-  // 6. DRAG + TOUCH + INERTIA
+  // 6. DRAG + TOUCH + INERIA
   // =========================
   let isDragging = false;
   let lastX = 0;
@@ -108,38 +84,30 @@ document.addEventListener('DOMContentLoaded', () => {
     isDragging = true;
     lastX = x;
     velocity = 0;
-
     cancelAnimationFrame(rafId);
     rafId = null;
-
-    cards.forEach(c => (c.isDragging = false));
+    cards.forEach(c => c.isDragging = false);
   }
 
   function moveDrag(x) {
     if (!isDragging) return;
-
     const dx = x - lastX;
     lastX = x;
     velocity = dx;
-
     container.scrollLeft -= dx;
     normalizeScroll();
-
-    cards.forEach(c => (c.isDragging = true));
+    cards.forEach(c => c.isDragging = true);
   }
 
   function stopDrag() {
     if (!isDragging) return;
-
     isDragging = false;
-    cards.forEach(c => (c.isDragging = false));
-
+    cards.forEach(c => c.isDragging = false);
     startInertia();
   }
 
   function startInertia() {
     const friction = 0.92;
-
     function step() {
       velocity *= friction;
       if (Math.abs(velocity) < 0.4) {
@@ -147,31 +115,27 @@ document.addEventListener('DOMContentLoaded', () => {
         rafId = null;
         return;
       }
-
       container.scrollLeft -= velocity;
       normalizeScroll();
-
       rafId = requestAnimationFrame(step);
     }
-
     rafId = requestAnimationFrame(step);
   }
 
-  // ==== MOUSE ====
+  // ==== МЫШЬ ====
   container.addEventListener('mousedown', e => startDrag(e.pageX));
   container.addEventListener('mousemove', e => moveDrag(e.pageX));
-  window.addEventListener('mouseup', stopDrag);
+  container.addEventListener('mouseup', stopDrag);
+  container.addEventListener('mouseleave', stopDrag);
 
   // ==== TOUCH ====
   container.addEventListener('touchstart', e => {
-    if (e.touches.length === 1) {
-      startDrag(e.touches[0].pageX);
-    }
+    if (e.touches.length === 1) startDrag(e.touches[0].pageX);
   }, { passive: true });
 
   container.addEventListener('touchmove', e => {
     if (e.touches.length === 1) {
-      e.preventDefault();
+      e.preventDefault(); // блокируем нативный горизонтальный скролл
       moveDrag(e.touches[0].pageX);
     }
   }, { passive: false });
@@ -179,10 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
   container.addEventListener('touchend', stopDrag);
   container.addEventListener('touchcancel', stopDrag);
 
-  // ==== WHEEL ====
+  // ==== КОЛЕСО ====
   container.addEventListener('wheel', e => {
     e.preventDefault();
-    velocity += e.deltaY * 0.6;
+    velocity += e.deltaY * 0.5;
     if (!rafId) startInertia();
   }, { passive: false });
 

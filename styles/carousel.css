@@ -4,7 +4,7 @@
 .carousel-container {
   width: 100%;
   max-width: 1400px;
-  overflow-x: auto;
+  overflow-x: auto;    /* важно для ПК скролла */
   overflow-y: hidden;
   display: flex;
   cursor: grab;
@@ -22,7 +22,6 @@
 
 /* ============================= */
 /* BOOK CARD */
-/* ============================= */
 .book-card {
   position: relative;
   width: 260px;
@@ -67,7 +66,6 @@
 /* ============================= */
 /* MOBILE */
 @media (max-width: 768px) {
-  .carousel-container { scroll-snap-type: x mandatory; }
-  .book-card { width: 85vw; scroll-snap-align: center; }
+  .book-card { width: 85vw; }
   .book-card:active .book-cover { transform: rotateY(-18deg); }
 }
