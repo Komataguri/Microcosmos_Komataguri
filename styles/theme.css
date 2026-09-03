@@ -11,10 +11,6 @@
   --button-bg: #2a2a2a;
   --button-border: #404040;
 
-  /* служебные */
-  --sticker-height: 51px;
-  --vertical-gap: 10px;
-  --font-size: 16px;
 }
 
 /* =========================
@@ -39,14 +35,4 @@ body.theme-sepia {
   --highlight-color: #9A3B3B;
   --button-bg: #e0d8c8;
   --button-border: #b0a898;
-}
-
-/* =========================
-   ОБЩИЕ ГЛОБАЛЬНЫЕ МЕЛОЧИ
-   ========================= */
-
-img {
-  display: block;
-  margin: 0;
-  padding: 0;
 }

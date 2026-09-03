@@ -13,8 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (window.innerWidth > 768) {
     const clonesBefore = originalCards.slice().reverse().map(c => c.cloneNode(true));
+    clonesBefore.forEach(clone => {
+      clone.tabIndex = -1;
+      clone.setAttribute('aria-hidden', 'true');
+    });
     clonesBefore.forEach(clone => carousel.insertBefore(clone, carousel.firstChild));
     const clonesAfter = originalCards.map(c => c.cloneNode(true));
+    clonesAfter.forEach(clone => {
+      clone.tabIndex = -1;
+      clone.setAttribute('aria-hidden', 'true');
+    });
     clonesAfter.forEach(clone => carousel.appendChild(clone));
     cards = Array.from(carousel.querySelectorAll('.book-card'));
     clonesCount = clonesBefore.length;
@@ -22,8 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cards = originalCards;
   }
 
-  const GAP = 20;
-  const cardWidth = cards[0].offsetWidth + GAP;
+  function cardStride() {
+    const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
+    return cards[0].getBoundingClientRect().width + gap;
+  }
 
   // =========================
   // ПОЗИЦИОНИРОВАНИЕ
@@ -52,11 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   if (window.innerWidth > 768) {
     container.addEventListener('scroll', () => {
-      const maxScroll = (originalCount + clonesCount) * cardWidth;
+      const stride = cardStride();
+      const maxScroll = (originalCount + clonesCount) * stride;
       if (container.scrollLeft <= 0) {
-        container.scrollLeft += originalCount * cardWidth;
+        container.scrollLeft += originalCount * stride;
       } else if (container.scrollLeft >= maxScroll) {
-        container.scrollLeft -= originalCount * cardWidth;
+        container.scrollLeft -= originalCount * stride;
       }
     });
   }
@@ -70,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cards.forEach(card => {
     card.addEventListener('click', () => {
-      if (dragHappened) return;
+      if (dragHappened || card.dataset.status === 'soon') return;
       const book = card.dataset.book;
       if (book) window.location.href = `book.html?book=${book}`;
     });
@@ -81,16 +92,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   if (window.innerWidth > 768) {
     let isDragging = false;
-    let dragStartX = 0;
-    let scrollStart = 0;
+    let dragDistance = 0;
+    let lastPointerX = 0;
+    let lastPointerTime = 0;
     let scrollVelocity = 0;
     let rafId = null;
 
     container.addEventListener('mousedown', e => {
       isDragging = true;
       dragHappened = false; // сброс в начале каждого нажатия
-      dragStartX = e.pageX - container.offsetLeft;
-      scrollStart = container.scrollLeft;
+      dragDistance = 0;
+      lastPointerX = e.clientX;
+      lastPointerTime = performance.now();
     });
 
     container.addEventListener('mouseleave', () => {
@@ -106,12 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
     container.addEventListener('mousemove', e => {
       if (!isDragging) return;
       e.preventDefault();
-      const x = e.pageX - container.offsetLeft;
-      const walk = x - dragStartX;
-      // Считаем драгом только если сдвиг больше 5px
-      if (Math.abs(walk) > 5) dragHappened = true;
-      container.scrollLeft = scrollStart - walk;
-      scrollVelocity = -walk;
+      const now = performance.now();
+      const walk = e.clientX - lastPointerX;
+      const elapsed = Math.max(now - lastPointerTime, 1);
+      dragDistance += Math.abs(walk);
+      if (dragDistance > 5) dragHappened = true;
+      container.scrollLeft -= walk;
+      scrollVelocity = (-walk / elapsed) * 16;
+      lastPointerX = e.clientX;
+      lastPointerTime = now;
     });
 
     container.addEventListener('wheel', e => {
@@ -123,9 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function smoothScroll() {
       container.scrollLeft += scrollVelocity;
       scrollVelocity *= 0.85;
-      const maxScroll = (originalCount + clonesCount) * cardWidth;
-      if (container.scrollLeft <= 0) container.scrollLeft += originalCount * cardWidth;
-      if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * cardWidth;
+      const stride = cardStride();
+      const maxScroll = (originalCount + clonesCount) * stride;
+      if (container.scrollLeft <= 0) container.scrollLeft += originalCount * stride;
+      if (container.scrollLeft >= maxScroll) container.scrollLeft -= originalCount * stride;
       if (Math.abs(scrollVelocity) > 0.5) {
         rafId = requestAnimationFrame(smoothScroll);
       } else {

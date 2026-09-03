@@ -56,8 +56,9 @@ for f in md_files:
         "title": title
     })
 
-# сортировка по индексу
-chapters.sort(key=lambda x: x['index'])
+# Стабильная сортировка. Если у двух материалов один номер,
+# дополнительным критерием становится полное имя файла.
+chapters.sort(key=lambda x: (x['index'], x['file'].casefold()))
 
 # запись JSON
 with open(OUTPUT_JSON, "w", encoding="utf-8") as out:

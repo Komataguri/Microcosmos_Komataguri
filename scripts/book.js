@@ -1,188 +1,535 @@
-console.log('book.js загружен');
-(function() {
-  'use strict';
+'use strict';
 
+(function initializeReader() {
   document.addEventListener('DOMContentLoaded', async () => {
-    if (!window.BOOKS) return alert('Ошибка: данные книг не загружены');
+    const params = new URLSearchParams(window.location.search);
+    const bookKey = params.get('book') || 'Book1';
+    const book = window.BOOKS?.[bookKey];
 
-    const BOOKS = window.BOOKS;
+    if (!book || book.status === 'soon') {
+      window.location.replace('index.html');
+      return;
+    }
 
     const loader = document.getElementById('loader');
     const tocList = document.getElementById('toc-list');
     const chapterContainer = document.getElementById('chapter-container');
     const chapterContent = document.getElementById('chapter-content');
+    const bookHeader = document.querySelector('header');
+    const tocSection = document.querySelector('.toc-section');
     const stickers = document.querySelectorAll('.nav-sticker');
     const scrollSticker = document.getElementById('scrollSticker');
     const progressBar = document.getElementById('progressBar');
+    const bookPath = book.path;
+
+    const storagePrefix = `reader:${bookKey}`;
+    const progressKey = `${storagePrefix}:progress`;
+    const cacheIndexKey = 'reader:chapter-cache:v2';
+    const maxCachedChapters = 20;
 
     let chapters = [];
-    let currentChapterIndex = Number(localStorage.getItem('lastChapter') || 0);
+    let currentChapterIndex = -1;
+    let currentLoadToken = 0;
+    let stickersVisible = true;
+    let tocReady = false;
+    let savedProgress = readJson(progressKey, null);
 
-    const params = new URLSearchParams(window.location.search);
-    const bookKey = params.get('book') || 'Book1';
-    const BOOK = BOOKS[bookKey];
-    if (!BOOK) return alert('Книга не найдена');
+    function readJson(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
 
-    const BOOK_PATH = BOOK.path; // локальная папка книги
+    function writeStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch {
+        return false;
+      }
+    }
 
-    // -------------------------
-    // Данные книги
-    // -------------------------
-    document.title = BOOK.title; 
-    document.querySelector('.book-cover').src = BOOK.cover;
-    const info = document.querySelector('.book-info');
-    info.innerHTML = `
-      <h2 class="book-title">${BOOK.title}</h2>
-      <p><span class="label">Автор:</span> ${BOOK.author}</p>
-      <p><span class="label">Год выпуска:</span> ${BOOK.year}</p>
-      <p><span class="label">Количество глав:</span> ${BOOK.chaptersCount}</p>
-      <p><span class="label">Жанры:</span> ${BOOK.genres}</p>
-      <p class="book-description"><span class="label">Аннотация:</span> ${BOOK.description}</p>
-    `;
+    function readStorage(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }
 
-    const debounce = (fn, delay=80) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args),delay); }; };
-    const toggleLoader = show => loader.style.display = show?'block':'none';
-    const rewriteImagePaths = md => md.replace(/!\[(.*?)\]\((.*?)\)/g, (_,alt,path)=>`<img src="${BOOK_PATH}/${path.replace(/^\.\/?/,'')}" alt="${alt}" loading="lazy">`);
+    function removeStorage(key) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // Настройки чтения необязательны. Сайт продолжит работать без них.
+      }
+    }
 
-    const adjustFontSize = delta => {
-      const min=12,max=22;
-      let size=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-size'))||16;
-      size=Math.min(max,Math.max(min,size+delta));
-      document.documentElement.style.setProperty('--font-size',`${size}px`);
-      localStorage.setItem('fontSize',size);
-    };
-    const resetFont = ()=>{ document.documentElement.style.setProperty('--font-size','16px'); localStorage.setItem('fontSize',16); };
+    function addInfoRow(container, label, value, className = '') {
+      const row = document.createElement('p');
+      if (className) row.className = className;
 
-    // -------------------------
-    // Загрузка TOC из локального chapters.json
-    // -------------------------
-    async function loadTableOfContents(){
+      const labelElement = document.createElement('span');
+      labelElement.className = 'label';
+      labelElement.textContent = `${label}:`;
+
+      const valueElement = document.createElement('span');
+      valueElement.textContent = ` ${value}`;
+
+      row.append(labelElement, valueElement);
+      container.appendChild(row);
+      return valueElement;
+    }
+
+    function renderBookInfo() {
+      document.title = book.title;
+      const cover = document.querySelector('.book-cover');
+      cover.src = book.cover;
+      cover.alt = `Обложка книги «${book.title}»`;
+
+      const info = document.querySelector('.book-info');
+      info.replaceChildren();
+
+      const title = document.createElement('h1');
+      title.className = 'book-title';
+      title.textContent = book.title;
+      info.appendChild(title);
+
+      addInfoRow(info, 'Автор', book.author);
+      addInfoRow(info, 'Год выпуска', book.year);
+      addInfoRow(info, 'Глав в оригинале', book.chaptersCount);
+      const available = addInfoRow(info, 'Доступно на сайте', 'загрузка…');
+      available.id = 'availableChapters';
+      addInfoRow(info, 'Жанры', book.genres);
+
+      const description = document.createElement('p');
+      description.className = 'book-description';
+      const descriptionLabel = document.createElement('span');
+      descriptionLabel.className = 'label';
+      descriptionLabel.textContent = 'Аннотация:';
+      const descriptionText = document.createElement('span');
+      descriptionText.className = 'book-description-text';
+      descriptionText.textContent = ` ${book.description}`;
+      description.append(descriptionLabel, descriptionText);
+      info.appendChild(description);
+
+      const continuePanel = document.createElement('div');
+      continuePanel.id = 'continueReading';
+      continuePanel.className = 'continue-reading';
+      continuePanel.hidden = true;
+
+      const continueButton = document.createElement('button');
+      continueButton.id = 'continueButton';
+      continueButton.className = 'continue-button';
+      continueButton.type = 'button';
+      continueButton.textContent = 'Продолжить чтение';
+
+      const continueTitle = document.createElement('span');
+      continueTitle.id = 'continueTitle';
+      continueTitle.className = 'continue-title';
+
+      continuePanel.append(continueButton, continueTitle);
+      info.appendChild(continuePanel);
+    }
+
+    function debounce(callback, delay = 100) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => callback(...args), delay);
+      };
+    }
+
+    function toggleLoader(show) {
+      loader.hidden = !show;
+    }
+
+    function chapterCacheKey(file) {
+      return `${storagePrefix}:chapter:${file}`;
+    }
+
+    function getCachedChapter(file) {
+      try {
+        return localStorage.getItem(chapterCacheKey(file));
+      } catch {
+        return null;
+      }
+    }
+
+    function cacheChapter(file, markdown) {
+      const key = chapterCacheKey(file);
+      const cached = readJson(cacheIndexKey, []).filter(item => item?.key !== key);
+      cached.push({ key, savedAt: Date.now() });
+
+      while (cached.length > maxCachedChapters) {
+        const oldest = cached.shift();
+        if (oldest?.key) removeStorage(oldest.key);
+      }
+
+      if (writeStorage(key, markdown)) {
+        writeStorage(cacheIndexKey, JSON.stringify(cached));
+      }
+    }
+
+    function rewriteImagePaths(markdown) {
+      return markdown.replace(
+        /!\[(.*?)\]\((.*?)\)/g,
+        (_, alt, path) => `<img src="${bookPath}/${path.replace(/^\.\/?/, '')}" alt="${alt}" loading="lazy" draggable="false">`
+      );
+    }
+
+    function buildUrl(chapterFile = null) {
+      const url = new URL(window.location.href);
+      url.search = '';
+      url.hash = '';
+      url.searchParams.set('book', bookKey);
+      if (chapterFile) url.searchParams.set('chapter', chapterFile);
+      return url;
+    }
+
+    function setHistory(chapterFile, mode = 'push') {
+      if (!mode) return;
+      const method = mode === 'replace' ? 'replaceState' : 'pushState';
+      history[method]({ book: bookKey, chapter: chapterFile }, '', buildUrl(chapterFile));
+    }
+
+    function resolveChapterIndex(value) {
+      if (!value) return -1;
+      const exact = chapters.findIndex(chapter => chapter.file === value);
+      if (exact >= 0) return exact;
+      return chapters.findIndex(chapter => chapter.file.includes(value));
+    }
+
+    function updateTocState() {
+      tocList.querySelectorAll('.toc-item').forEach((item, index) => {
+        item.classList.toggle('active', index === currentChapterIndex);
+        item.classList.toggle('last-read', chapters[index]?.file === savedProgress?.file);
+      });
+    }
+
+    function updateContinuePanel() {
+      const panel = document.getElementById('continueReading');
+      const button = document.getElementById('continueButton');
+      const title = document.getElementById('continueTitle');
+      const index = resolveChapterIndex(savedProgress?.file);
+
+      if (index < 0) {
+        panel.hidden = true;
+        return;
+      }
+
+      panel.hidden = false;
+      title.textContent = chapters[index].title;
+      button.onclick = () => loadChapter(index, {
+        historyMode: 'push',
+        restoreScroll: true
+      });
+    }
+
+    function saveProgress(scrollPosition = window.scrollY, updateUi = true) {
+      const chapter = chapters[currentChapterIndex];
+      if (!chapter) return;
+
+      savedProgress = {
+        file: chapter.file,
+        index: currentChapterIndex,
+        title: chapter.title,
+        scrollY: Math.max(0, Math.round(scrollPosition)),
+        updatedAt: Date.now()
+      };
+
+      writeStorage(progressKey, JSON.stringify(savedProgress));
+      if (updateUi) {
+        updateTocState();
+        updateContinuePanel();
+      }
+    }
+
+    function migrateLegacyProgress() {
+      if (savedProgress || bookKey !== 'Book1') return;
+      try {
+        const legacyValue = readStorage('lastChapter');
+        const legacyIndex = Number(legacyValue);
+        if (legacyValue !== null && Number.isInteger(legacyIndex) && chapters[legacyIndex]) {
+          savedProgress = {
+            file: chapters[legacyIndex].file,
+            index: legacyIndex,
+            title: chapters[legacyIndex].title,
+            scrollY: 0,
+            updatedAt: Date.now()
+          };
+          writeStorage(progressKey, JSON.stringify(savedProgress));
+        }
+        removeStorage('lastChapter');
+      } catch {
+        // Старые данные можно безопасно проигнорировать.
+      }
+    }
+
+    function renderTocError(message) {
+      tocList.replaceChildren();
+      const item = document.createElement('li');
+      item.className = 'load-error';
+      const text = document.createElement('p');
+      text.textContent = `Не удалось загрузить оглавление: ${message}`;
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'retry-button';
+      retry.textContent = 'Попробовать снова';
+      retry.onclick = loadTableOfContents;
+      item.append(text, retry);
+      tocList.appendChild(item);
+    }
+
+    async function loadTableOfContents() {
       try {
         toggleLoader(true);
-        const res = await fetch(`${BOOK_PATH}/chapters.json`);
-        if(!res.ok) throw new Error(res.statusText);
-        chapters = await res.json();
+        const response = await fetch(`${bookPath}/chapters.json`);
+        if (!response.ok) throw new Error(`код ${response.status}`);
 
-        tocList.innerHTML = chapters.map((c,i)=>`<li class="toc-item"><a data-index="${i}">${c.title}</a></li>`).join('');
-        tocList.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>loadChapter(+a.dataset.index)));
-      } catch(e){
-        tocList.innerHTML = `<li style="color:#ff5555">Ошибка загрузки: ${e.message}</li>`;
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error('неверный формат данных');
+        chapters = data.filter(chapter => chapter?.file && chapter?.title);
+        tocReady = true;
+
+        tocList.replaceChildren();
+        chapters.forEach((chapter, index) => {
+          const item = document.createElement('li');
+          item.className = 'toc-item';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'toc-link';
+          button.textContent = chapter.title;
+          button.addEventListener('click', () => loadChapter(index, { historyMode: 'push' }));
+
+          item.appendChild(button);
+          tocList.appendChild(item);
+        });
+
+        document.getElementById('availableChapters').textContent = String(chapters.length);
+        migrateLegacyProgress();
+        updateTocState();
+        updateContinuePanel();
+      } catch (error) {
+        renderTocError(error.message || 'неизвестная ошибка');
       } finally {
         toggleLoader(false);
       }
     }
 
-    // -------------------------
-    // Загрузка конкретной главы
-    // -------------------------
-    async function loadChapter(index){
+    function showChapterError(index, error) {
+      chapterContent.replaceChildren();
+      const box = document.createElement('div');
+      box.className = 'load-error chapter-error';
+      const message = document.createElement('p');
+      message.textContent = `Не удалось загрузить главу: ${error.message || 'неизвестная ошибка'}`;
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'retry-button';
+      retry.textContent = 'Попробовать снова';
+      retry.onclick = () => loadChapter(index, { historyMode: null });
+      box.append(message, retry);
+      chapterContent.appendChild(box);
+      chapterContent.classList.add('visible');
+    }
+
+    async function loadChapter(index, options = {}) {
+      const { historyMode = 'push', restoreScroll = false } = options;
+      const chapter = chapters[index];
+      if (!chapter) return;
+
+      const token = ++currentLoadToken;
+      toggleLoader(true);
+      chapterContent.classList.add('is-loading');
+
       try {
-        toggleLoader(true);
-        currentChapterIndex = index;
-        localStorage.setItem('lastChapter', index);
-
-        const chapter = chapters[index];
-        if(!chapter) throw new Error('Глава не найдена');
-
-        document.title = `${chapter.title} | ${BOOK.title}`;
-
-        let md = localStorage.getItem(chapter.file);
-        if(!md){
-          const res = await fetch(`${BOOK_PATH}/${chapter.file}`);
-          if(!res.ok) throw new Error(res.statusText);
-          md = await res.text();
-
-          // Сохраняем только последние 20 глав
-          const MAX_CHAPTERS = 20;
-          let savedChapters = JSON.parse(localStorage.getItem('savedChapters') || '[]');
-          if(!savedChapters.includes(chapter.file)) savedChapters.push(chapter.file);
-          while(savedChapters.length > MAX_CHAPTERS){
-            const old = savedChapters.shift();
-            localStorage.removeItem(old);
-          }
-          localStorage.setItem('savedChapters', JSON.stringify(savedChapters));
-          localStorage.setItem(chapter.file, md);
+        let markdown = getCachedChapter(chapter.file);
+        if (!markdown) {
+          const response = await fetch(`${bookPath}/${chapter.file}`);
+          if (!response.ok) throw new Error(`код ${response.status}`);
+          markdown = await response.text();
+          cacheChapter(chapter.file, markdown);
         }
 
-        md = rewriteImagePaths(md);
-        chapterContent.innerHTML = marked.parse(md);
-        hljs.highlightAll();
+        if (token !== currentLoadToken) return;
 
+        currentChapterIndex = index;
+        document.title = `${chapter.title} | ${book.title}`;
+        chapterContent.innerHTML = marked.parse(rewriteImagePaths(markdown));
         chapterContent.classList.remove('visible');
-        setTimeout(()=>chapterContent.classList.add('visible'),10);
+        chapterContainer.hidden = false;
+        bookHeader.hidden = true;
+        tocSection.hidden = true;
+        setHistory(chapter.file, historyMode);
 
-        chapterContainer.style.display='block';
-        document.querySelector('header').style.display='none';
-        document.querySelector('section').style.display='none';
-        window.scrollTo(0,0);
+        const canRestore = restoreScroll && savedProgress?.file === chapter.file;
+        const scrollPosition = canRestore ? Number(savedProgress.scrollY) || 0 : 0;
+        saveProgress(scrollPosition);
+        updateTocState();
 
-      } catch(e){
-        chapterContent.innerHTML = `<p style="color:#ff5555;text-align:center">Ошибка загрузки главы</p>`;
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+          chapterContent.classList.add('visible');
+        });
+      } catch (error) {
+        if (token !== currentLoadToken) return;
+        currentChapterIndex = index;
+        chapterContainer.hidden = false;
+        bookHeader.hidden = true;
+        tocSection.hidden = true;
+        showChapterError(index, error);
       } finally {
-        toggleLoader(false);
+        if (token === currentLoadToken) {
+          chapterContent.classList.remove('is-loading');
+          toggleLoader(false);
+        }
       }
     }
 
-    const navigateChapter = dir => {
-      const i = currentChapterIndex + dir;
-      if(i>=0 && i<chapters.length) loadChapter(i);
-      else alert(dir===1?'Это последняя глава':'Это первая глава');
-    };
-    const showTOC = () => {
-      chapterContainer.style.display='none';
-      document.querySelector('header').style.display='block';
-      document.querySelector('section').style.display='block';
-    };
+    function navigateChapter(direction) {
+      const fallback = resolveChapterIndex(savedProgress?.file);
+      const origin = currentChapterIndex >= 0 ? currentChapterIndex : fallback;
+      const nextIndex = origin + direction;
 
-    // -------------------------
-    // Stickers
-    // -------------------------
-    const themeSticker = document.getElementById('themeSticker');
-    themeSticker.addEventListener('click', ()=>{
-      const curr = localStorage.getItem('theme') || 'graphite';
-      const next = curr==='graphite'?'sepia':'graphite';
-      document.body.classList.remove('theme-graphite','theme-sepia');
-      document.body.classList.add(`theme-${next}`);
-      localStorage.setItem('theme',next);
+      if (nextIndex >= 0 && nextIndex < chapters.length) {
+        loadChapter(nextIndex, { historyMode: 'push' });
+        return;
+      }
+
+      alert(direction === 1 ? 'Это последняя глава' : 'Это первая глава');
+    }
+
+    function showTableOfContents(options = {}) {
+      const { historyMode = 'push' } = options;
+      if (currentChapterIndex >= 0) saveProgress();
+      chapterContainer.hidden = true;
+      bookHeader.hidden = false;
+      tocSection.hidden = false;
+      document.title = book.title;
+      setHistory(null, historyMode);
+      updateTocState();
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }));
+    }
+
+    function adjustFontSize(delta) {
+      const min = 14;
+      const max = 24;
+      const current = parseInt(
+        getComputedStyle(document.documentElement).getPropertyValue('--font-size'),
+        10
+      ) || 16;
+      const size = Math.min(max, Math.max(min, current + delta));
+      document.documentElement.style.setProperty('--font-size', `${size}px`);
+      writeStorage('reader:font-size', String(size));
+    }
+
+    function resetFont() {
+      document.documentElement.style.setProperty('--font-size', '16px');
+      writeStorage('reader:font-size', '16');
+    }
+
+    function initializeControls() {
+      const savedTheme = readStorage('reader:theme') || readStorage('theme') || 'graphite';
+      document.body.classList.add(`theme-${savedTheme}`);
+
+      const savedFontSize = readStorage('reader:font-size') || readStorage('fontSize');
+      if (savedFontSize) {
+        const safeSize = Math.min(24, Math.max(14, Number(savedFontSize) || 16));
+        document.documentElement.style.setProperty('--font-size', `${safeSize}px`);
+      }
+
+      document.getElementById('themeSticker').addEventListener('click', () => {
+        const current = document.body.classList.contains('theme-sepia') ? 'sepia' : 'graphite';
+        const next = current === 'graphite' ? 'sepia' : 'graphite';
+        document.body.classList.remove('theme-graphite', 'theme-sepia');
+        document.body.classList.add(`theme-${next}`);
+        writeStorage('reader:theme', next);
+      });
+
+      document.getElementById('fontInc').onclick = () => adjustFontSize(1);
+      document.getElementById('fontDec').onclick = () => adjustFontSize(-1);
+      document.getElementById('fontReset').onclick = resetFont;
+      document.getElementById('homeSticker').onclick = () => {
+        if (currentChapterIndex >= 0) saveProgress();
+        location.href = 'index.html';
+      };
+      document.getElementById('prevSticker').onclick = () => navigateChapter(-1);
+      document.getElementById('nextSticker').onclick = () => navigateChapter(1);
+      document.getElementById('tocSticker').onclick = () => showTableOfContents();
+
+      scrollSticker.onclick = () => {
+        const maximum = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const atBottom = window.scrollY >= maximum - 12;
+        window.scrollTo({ top: atBottom ? 0 : maximum, behavior: 'smooth' });
+      };
+    }
+
+    const handleScroll = debounce(() => {
+      const maximum = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = maximum > 0 ? (window.scrollY / maximum) * 100 : 0;
+      progressBar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+      scrollSticker.textContent = window.scrollY >= maximum - 12 ? '↑' : '↓';
+      scrollSticker.setAttribute(
+        'aria-label',
+        window.scrollY >= maximum - 12 ? 'В начало страницы' : 'В конец страницы'
+      );
+      if (!chapterContainer.hidden && currentChapterIndex >= 0) saveProgress(window.scrollY, false);
+    }, 120);
+
+    renderBookInfo();
+    initializeControls();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('pagehide', () => {
+      if (!chapterContainer.hidden && currentChapterIndex >= 0) saveProgress(window.scrollY, false);
     });
 
-    document.getElementById('fontInc').onclick=()=>adjustFontSize(1);
-    document.getElementById('fontDec').onclick=()=>adjustFontSize(-1);
-    document.getElementById('fontReset').onclick=resetFont;
-    document.getElementById('homeSticker').onclick=()=>location.href='index.html';
-    document.getElementById('prevSticker').onclick=()=>navigateChapter(-1);
-    document.getElementById('nextSticker').onclick=()=>navigateChapter(1);
-    document.getElementById('tocSticker').onclick=showTOC;
-
-    scrollSticker.onclick=()=>{
-      const bottom = chapterContent.scrollHeight - chapterContainer.clientHeight;
-      window.scrollTo({ top: scrollY>=bottom?0:bottom, behavior:'smooth' });
-    };
-
-    window.addEventListener('scroll', debounce(()=>{ 
-      const h = document.documentElement.scrollHeight - window.innerHeight; 
-      progressBar.style.width = h>0?(scrollY/h*100)+'%':'0%'; 
-    }));
-
-    let stickersVisible = true;
-    document.body.addEventListener('click', e=>{
-      if(e.target.closest('.nav-sticker')) return;
+    document.body.addEventListener('click', event => {
+      if (chapterContainer.hidden || event.target.closest('button, a, .nav-sticker')) return;
       stickersVisible = !stickersVisible;
-      stickers.forEach(s=>s.classList.toggle('hidden-sticker', !stickersVisible));
+      stickers.forEach(sticker => sticker.classList.toggle('hidden-sticker', !stickersVisible));
     });
 
-    const savedTheme = localStorage.getItem('theme') || 'graphite';
-    document.body.classList.add(`theme-${savedTheme}`);
-    const fs = localStorage.getItem('fontSize');
-    if(fs) document.documentElement.style.setProperty('--font-size',`${fs}px`);
+    window.addEventListener('popstate', () => {
+      const chapterFile = new URLSearchParams(window.location.search).get('chapter');
+      const index = resolveChapterIndex(chapterFile);
+      if (index >= 0) {
+        loadChapter(index, {
+          historyMode: null,
+          restoreScroll: savedProgress?.file === chapters[index].file
+        });
+      } else {
+        showTableOfContents({ historyMode: null });
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (chapterContainer.hidden || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === 'ArrowLeft') navigateChapter(-1);
+      if (event.key === 'ArrowRight') navigateChapter(1);
+    });
 
     await loadTableOfContents();
 
-    const q = new URLSearchParams(window.location.search).get('chapter');
-    if(q){
-      const i = chapters.findIndex(c => c.file.includes(q));
-      if(i>=0) loadChapter(i);
-    }
+    if (!tocReady) return;
 
+    const requestedChapter = params.get('chapter');
+    const requestedIndex = resolveChapterIndex(requestedChapter);
+    if (requestedChapter && requestedIndex < 0) {
+      const notice = document.createElement('li');
+      notice.className = 'load-error';
+      notice.textContent = 'Глава из ссылки не найдена. Выберите главу из оглавления.';
+      tocList.prepend(notice);
+    } else if (requestedIndex >= 0) {
+      await loadChapter(requestedIndex, {
+        historyMode: 'replace',
+        restoreScroll: savedProgress?.file === chapters[requestedIndex].file
+      });
+    } else {
+      setHistory(null, 'replace');
+    }
   });
 })();
